@@ -3,7 +3,12 @@ using UnityEngine;
 
 namespace Afterburn.Core
 {
-    /// <summary>One cached centreline sample (PortSpec §1): position, unit tangent, unit normal.</summary>
+    /// <summary>
+    /// One cached centreline sample — the track frame (PortSpec §1 + D6 directive):
+    /// position, unit tangent, unit normal, unit up. All ship/camera math is written against
+    /// this frame; on flat Arena01, Up is exactly world-up and everything degenerates to the
+    /// prototype's arithmetic.
+    /// </summary>
     public readonly struct TrackSample
     {
         public readonly Vector3 Pos;
@@ -12,11 +17,15 @@ namespace Afterburn.Core
         /// <summary>normalize(cross(Tan, up)) — for the prototype loop, +Nrm points toward the interior.</summary>
         public readonly Vector3 Nrm;
 
-        public TrackSample(Vector3 pos, Vector3 tan, Vector3 nrm)
+        /// <summary>normalize(cross(Nrm, Tan)) — exactly (0,1,0) on a flat track.</summary>
+        public readonly Vector3 Up;
+
+        public TrackSample(Vector3 pos, Vector3 tan, Vector3 nrm, Vector3 up)
         {
             Pos = pos;
             Tan = tan;
             Nrm = nrm;
+            Up = up;
         }
     }
 
@@ -67,7 +76,8 @@ namespace Afterburn.Core
                 Vector3 pos = spline.GetPointAt(t);
                 Vector3 tan = spline.GetTangentAt(t);           // already normalised
                 Vector3 nrm = Vector3.Cross(tan, Vector3.up).normalized;
-                samples[i] = new TrackSample(pos, tan, nrm);
+                Vector3 up = Vector3.Cross(nrm, tan).normalized; // world-up exactly on flat tracks
+                samples[i] = new TrackSample(pos, tan, nrm, up);
             }
             return samples;
         }

@@ -50,7 +50,10 @@
 | ID | Milestone | Status |
 |---|---|---|
 | U0 | `Afterburn_BUILD.md` gated handoff written | ✅ 2026-07-09 |
-| U1 | Phase 0 inventory + skeleton signed off | 🔨 **built + verified 2026-07-09 — AWAITING SENI SIGN-OFF** (compiles clean, 9 SOs seeded idempotently, 15/15 tests, ship+camera in Race.unity) |
+| U1 | Phase 0 inventory + skeleton signed off | ✅ **SIGNED OFF 2026-07-09** (Seni verified Race.unity in Simulator; compiles clean, 9 SOs, 15/15 tests) |
+| U2 | Core energy loop, 3D-ready + fixed-tick (D6) | 🔨 **built + verified headless 2026-07-09** (parity instrument passing; feel sign-off pending at playable) |
+| U3 | Hulls, pilots, shortcuts, combat | 🔨 **built + verified headless 2026-07-09** (rulings #3/#7 applied; 9 combat tests) |
+| U4 | Ghosts, bounty, race flow, recorded-ghost format | 🔨 **built + verified headless 2026-07-09** (rulings #4/#5 applied; replay determinism bitwise; skill-band re-tune pending Seni) |
 | U2 | Core energy loop in Unity | ⬜ |
 | U3 | Hulls + pilots as ScriptableObjects | ⬜ |
 | U4 | Ghost system | ⬜ |

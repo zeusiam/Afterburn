@@ -9,6 +9,21 @@
 
 ---
 
+## 2026-07-09 — Session 7 (headless build: U2 → U4 game logic)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `UNITY` | **U1 signed off by Seni** (Race.unity verified in Simulator); headless directive issued: build game logic through U4, UI after | Owner's call — gates verified by automated evidence, feel sign-off at the playable build |
+| `UNITY` | **U2 built:** `EnergyCore` (single spend authority), `TrackSystem` (frames + windowed progress-coherent nearest + shortcut gating + per-race wall state), `ShipController` (prototype updatePlayer step-for-step, **fixed 60 Hz tick, track-frame math per D6** — flat = degenerate case), `RaceRunner` (accumulator + interpolation, prototype keyboard) | The kill-gate loop, 3D-ready from day one |
+| `SWEEP` | **Parity instrument built and passing:** Node harness executes the ACTUAL prototype JS (verbatim slices, r128 shim, double precision) → 3600-frame reference trace; C# replays the schedule. **Proven: frame-0 + pre-contact arithmetic exact (<0.02u); wall containment all 60 s; energy economy ≤0.55 whole-run; fire 3/3, boost ticks 221/221, shield 76/76 exact.** Post-contact positional lockstep documented as chaos-bound (measured, report-only) | "Feels like the prototype" is now falsifiable; cross-validated — both sims independently produce the same cruise peak (58.19) and grind equilibrium (~9.36) |
+| `UNITY` | **U3 built:** `IRacer` contract, `CombatSystem` (prototype-exact 40-bullet pool, shield ×0.40, bounty 8/16, **siphon capped at victim's pool — ruling #7**), `PilotAbilitySystem` (EMP/Phase/Siphon/Decoy, cooldown-gated, zero energy), Heavy wall break + **per-race reset (ruling #3)**, CombatView greybox | Combat economy exactly as frozen, with the two combat rulings applied |
+| `UNITY` | **U4 built:** `GhostRacer` (rail-locked curve follower, **rulings #4 single-skill + #5 laps=−1**, seeded RNG), `RaceDirector` (Countdown→Racing→Finished, prototype grid, ±0.5 lap wrap + anti-cheese, every-tick bounty leader, standings, stats), **`GhostRecording` format** (fixed-tick input stream + cosmetic header + wall-break tick; **bitwise replay determinism proven incl. through serialization**), full roster in Race.unity + dev overlay | The race is complete: 3 tinted ghosts, combat, bounty, finish — playable in greybox |
+| `SWEEP` | **59/59 edit-mode tests green**, zero compile errors across all batchmode runs. Notable: same-seed race determinism; boost dry-tank self-cancel; wall-grind equilibrium cross-validated against the prototype's own measured behaviour | U2–U4 acceptance evidence |
+
+**⏭ Next:** Seni's feel pass on the playable greybox (side-by-side vs the HTML at frozen tuning — the formal U2 criterion), skill-band re-tune check (U4 gate item), then **U5: HUD + front-end + touch** per UIEnvSpec.
+
+---
+
 ## 2026-07-09 — Session 6 (design pass 3 — battle-racer identity + audited economy)
 
 | Type | Change | Rationale |

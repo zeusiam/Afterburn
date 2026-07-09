@@ -15,6 +15,7 @@ namespace Afterburn.View
         [SerializeField] private HullDefinition? hull;
 
         private Transform? _thruster;
+        private Color? _tintOverride;
 
         public HullDefinition? Hull
         {
@@ -22,12 +23,19 @@ namespace Afterburn.View
             set => hull = value;
         }
 
+        /// <summary>Roster tint override (prototype: ghost colors trump hull colors). Set before Awake.</summary>
+        public Color? TintOverride
+        {
+            get => _tintOverride;
+            set => _tintOverride = value;
+        }
+
         /// <summary>The thruster glow — U2's ShipView will scale/tint it with boost state.</summary>
         public Transform? Thruster => _thruster;
 
         private void Awake()
         {
-            Color tint = hull != null ? hull.tintColor : GreyboxMaterials.Hex("#9D7BFF");
+            Color tint = _tintOverride ?? (hull != null ? hull.tintColor : GreyboxMaterials.Hex("#9D7BFF"));
             BuildBody(tint);
             BuildWing();
             BuildThruster();

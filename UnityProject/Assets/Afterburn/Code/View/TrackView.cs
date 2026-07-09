@@ -18,6 +18,7 @@ namespace Afterburn.View
         [SerializeField] private TrackDefinition? track;
 
         private TrackSample[]? _samples;
+        private GameObject? _heavySlab;
 
         public TrackDefinition? Track
         {
@@ -43,6 +44,12 @@ namespace Afterburn.View
                 return;
             }
             BuildGreybox();
+        }
+
+        /// <summary>Prototype: the slab hides when the Heavy smashes it (no shatter VFX in greybox).</summary>
+        public void HideHeavySlab()
+        {
+            if (_heavySlab != null) _heavySlab.SetActive(false);
         }
 
         private void BuildGreybox()
@@ -221,6 +228,7 @@ namespace Afterburn.View
                 else if (zone.access == GateAccess.HeavyWall)
                 {
                     var slab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    _heavySlab = slab;
                     slab.name = "HeavyWallSlab";
                     slab.transform.SetParent(transform, false);
                     Object.Destroy(slab.GetComponent<Collider>());

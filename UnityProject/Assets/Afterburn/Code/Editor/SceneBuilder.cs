@@ -114,6 +114,25 @@ namespace Afterburn.EditorTools
                 new Vector3(start.Pos.x, 1.2f, start.Pos.z),
                 Quaternion.LookRotation(new Vector3(start.Tan.x, 0f, start.Tan.z), Vector3.up));
 
+            // U2–U4: the race driver — full roster (player Medium+Vex vs heavy/light/medium ghosts),
+            // prototype keyboard scheme, combat + abilities + bounty live. HUD is a dev overlay until U5.
+            var tuning = AssetDatabase.LoadAssetAtPath<GameTuning>(AfterburnMenu.GameTuningPath);
+            var vex = AssetDatabase.LoadAssetAtPath<PilotDefinition>(AfterburnMenu.PilotsDir + "/Vex.asset");
+            var heavyHull = AssetDatabase.LoadAssetAtPath<HullDefinition>(AfterburnMenu.HullsDir + "/Heavy.asset");
+            var lightHull = AssetDatabase.LoadAssetAtPath<HullDefinition>(AfterburnMenu.HullsDir + "/Light.asset");
+            var runnerGo = new GameObject("RaceRunner");
+            var runner = runnerGo.AddComponent<RaceRunner>();
+            runner.Track = arena;
+            runner.Tuning = tuning;
+            runner.PlayerHull = mediumHull;
+            runner.PlayerPilot = vex;
+            runner.HeavyHull = heavyHull;
+            runner.LightHull = lightHull;
+            runner.MediumHull = mediumHull;
+            runner.ShipTransform = shipGo.transform;
+            runner.Greybox = trackView;
+            EditorUtility.SetDirty(runner);
+
             // Chase camera (PortSpec §2), parked at its rest pose behind the ship.
             var camGo = new GameObject("Main Camera") { tag = "MainCamera" };
             var cam = camGo.AddComponent<Camera>();
