@@ -43,6 +43,25 @@ namespace Afterburn.View
             return mat;
         }
 
+        /// <summary>
+        /// Transparent URP Lit — the ghost-hologram treatment (UIEnvSpec §3.1: ghosts read as
+        /// intangible, ~0.55 alpha in greybox; the player is always the most solid object on track).
+        /// </summary>
+        public static Material LitTransparent(Color baseColor, float alpha, float roughness, float metalness,
+            Color? emission = null, float emissionIntensity = 1f)
+        {
+            Material mat = Lit(new Color(baseColor.r, baseColor.g, baseColor.b, alpha),
+                roughness, metalness, emission, emissionIntensity);
+            mat.SetFloat(Shader.PropertyToID("_Surface"), 1f);   // URP: Transparent surface
+            mat.SetOverrideTag("RenderType", "Transparent");
+            mat.SetFloat(Shader.PropertyToID("_SrcBlend"), (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            mat.SetFloat(Shader.PropertyToID("_DstBlend"), (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            mat.SetFloat(Shader.PropertyToID("_ZWrite"), 0f);
+            mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            return mat;
+        }
+
         /// <summary>URP Unlit flat color (thruster glow, bullets, grid lines).</summary>
         public static Material Unlit(Color color)
         {

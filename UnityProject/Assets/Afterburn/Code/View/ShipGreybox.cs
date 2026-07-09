@@ -30,6 +30,14 @@ namespace Afterburn.View
             set => _tintOverride = value;
         }
 
+        /// <summary>
+        /// Ghost-hologram treatment (UIEnvSpec §3.1): semi-transparent body/wing so intangibility
+        /// READS — racers pass through ghosts by design (async opponents, no ship-ship collision,
+        /// prototype parity). The thruster stays opaque-bright for trackability at range.
+        /// Set before Awake.
+        /// </summary>
+        public bool HologramMode { get; set; }
+
         /// <summary>The thruster glow — U2's ShipView will scale/tint it with boost state.</summary>
         public Transform? Thruster => _thruster;
 
@@ -90,8 +98,9 @@ namespace Afterburn.View
             var body = new GameObject("Body");
             body.transform.SetParent(transform, false);
             body.AddComponent<MeshFilter>().sharedMesh = mesh;
-            body.AddComponent<MeshRenderer>().sharedMaterial =
-                GreyboxMaterials.Lit(tint, 0.4f, 0.4f, tint, 0.25f);
+            body.AddComponent<MeshRenderer>().sharedMaterial = HologramMode
+                ? GreyboxMaterials.LitTransparent(tint, 0.55f, 0.4f, 0.4f, tint, 0.6f)
+                : GreyboxMaterials.Lit(tint, 0.4f, 0.4f, tint, 0.25f);
         }
 
         /// <summary>Prototype: Box(5, 0.4, 1.6), color #000223, metalness .5, at z −1.2.</summary>
@@ -103,8 +112,9 @@ namespace Afterburn.View
             Destroy(wing.GetComponent<Collider>());
             wing.transform.localScale = new Vector3(5f, 0.4f, 1.6f);
             wing.transform.localPosition = new Vector3(0f, 0f, -1.2f);
-            wing.GetComponent<MeshRenderer>().sharedMaterial =
-                GreyboxMaterials.Lit(GreyboxMaterials.Hex("#000223"), 0.5f, 0.5f);
+            wing.GetComponent<MeshRenderer>().sharedMaterial = HologramMode
+                ? GreyboxMaterials.LitTransparent(GreyboxMaterials.Hex("#000223"), 0.45f, 0.5f, 0.5f)
+                : GreyboxMaterials.Lit(GreyboxMaterials.Hex("#000223"), 0.5f, 0.5f);
         }
 
         /// <summary>Prototype: unlit sphere r 0.9 at z −2.6, color #FF7A3C.</summary>

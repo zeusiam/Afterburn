@@ -85,6 +85,7 @@ namespace Afterburn.View
                 var greybox = ghostGo.AddComponent<ShipGreybox>();
                 greybox.Hull = _race.Ghosts[g].Hull;
                 greybox.TintOverride = GreyboxMaterials.Hex(GhostTints[g]);
+                greybox.HologramMode = true;               // ghosts READ intangible (UIEnvSpec §3.1)
                 ghostGo.SetActive(true);
                 _transforms[g + 1] = ghostGo.transform;
             }
