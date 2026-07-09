@@ -9,6 +9,21 @@
 
 ---
 
+## 2026-07-09 — Session 5 (design pass 2)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `DESIGN` | **Design review & assessment** against Seni's expanded vision (full 3D world, combat strategy, racing excitement, challenge, visual impressiveness) — 4-lens design panel (track/combat/monetisation/art) + synthesis → **`Afterburn_DesignReview.md`** | The validated energy loop stands; the gaps are the flat track, thin feel layer, no challenge ladder, and no owned art direction |
+| `DESIGN` | **New locked decisions D5–D8:** D5 launch = 1 arena + 2 full-3D fast-follow · D6 **U2 physics is 3D-track-frame from day one** (flat = degenerate case, parity trace-diff mandatory) · D7 **no ads, ever** · D8 Game Center first (Nibwell GameKit pattern), Play Games at U7 | Seni's calls 2026-07-09; BUILD.md §1/§7.2/§7.6/§10 amended to match |
+| `DESIGN` | **IAP catalog defined** (direct-priced cosmetics: liveries incl. energy-reactive tier, boost-visible trails, nameplates, founder pack, pilots; no hard currency/gacha/timers/run-gating) + **ghost records must carry cosmetic loadout** — the status billboard | Cosmetics need an audience in an async-ghost game; competitive integrity guardrails untouched |
+| `DESIGN` | **Game Center spec:** per-arena race/lap boards (classic + weekly), career boards, ~20 mechanics-tied achievements | Studio GameKit precedent (Nibwell) makes this low-risk |
+| `UNITY` | **`Afterburn_UIEnvSpec.md` written** — the requirements spec for the Claude design/build agent: emissive-first art direction, environment modular kit, 3 arena themes, VFX list, full UI system (landscape 2796×1290), URP mobile budgets, phased deliverables with acceptance criteria | Purpose-built for a code-only builder: procedural meshes, shaders, SDF, uGUI — no hand-painted assets required |
+| `SCOPE` | Prototype bug rulings recommended (fix ghost free-lap #5, ghost skill² #4, broken-wall-for-all #3, Siphon minting #7; keep straightened cone #16; add countdown) — **await Seni confirmation at U2 gate** | PortSpec divergences need explicit rulings before the parity build |
+
+**⏭ Next:** U1 gate sign-off still open (open `Race.unity`, press Play). Then U2 with the D6 3D-ready directive.
+
+---
+
 ## 2026-07-09 — Session 4
 
 | Type | Change | Rationale |

@@ -32,9 +32,11 @@ This is written to be executed by a **Claude Code Unity build agent**, one gated
 | **Hull count** | **3** (Light / Medium / Heavy) | D3 confirmed |
 | **Core loop** | Single shared **Energy** pool; boost/fire/shield mutually exclusive; regen only while coasting | **P2 passed** |
 | **Tuning baseline** | Frozen from prototype → `GameTuning` (§5.3) | D4 frozen |
-| **Monetisation** | Cosmetics + pilots. **No stat-power in ranked.** Pilot upgrades reduce cooldown only | Locked |
+| **Monetisation** | Cosmetics + pilots. **No stat-power in ranked.** Pilot upgrades reduce cooldown only. **No ads, ever** (D7, 2026-07-09) | Locked |
 
-**Still explicitly OUT of this build** (unchanged from the prototype non-goals): real-time multiplayer, battle mode, multiple arenas, full IAP economy polish, progression/save beyond loadout. One arena, greybox-first.
+**Still explicitly OUT of this build** (unchanged from the prototype non-goals): real-time multiplayer, battle mode, full IAP economy polish, progression/save beyond loadout. Greybox-first.
+
+> **Amended 2026-07-09 (design pass 2 — see `Afterburn_DesignReview.md`):** launch ships **one arena** (Arena01, flat — the kill-gate parity fixture), with **two full-3D arenas as fast-follow content updates** (D5). U2's physics is engineered **3D-track-frame from day one** with flat as the degenerate case (D6) so those arenas are data, not a rework. Game Center (iOS) lands first via the studio GameKit pattern; Play Games parity at U7 (D8).
 
 ---
 
@@ -188,6 +190,8 @@ Each maps a prototype module (`Afterburn_Prototype_Architecture.md §4`) to a Un
 - **Owns:** thrust/steer/speed integration, wall collision (nearest-centreline lateral clamp + slide), speed caps for boost/shield/spinout, hull application.
 - **Depends on:** `EnergyCore`, `HullDefinition`, `TrackSystem` (for nearest sample + shortcut allowance).
 - **Mutual-exclusion resolver lives here** and calls `EnergyCore` — mirror `updatePlayer()` in the prototype exactly: boost > shield priority for held inputs; fire only if neither active; drain/regen selection; caps.
+- **3D-ready directive (D6, 2026-07-09):** written against **per-sample track frames** `{pos, tan, nrm, up}`, never world-up — pose = `pos + nrm·lateral + up·rideHeight`; steering rotates a world-space forward about `sample.up`. On flat Arena01 every operation reduces to the prototype's exact arithmetic — **assert this in edit-mode tests + a per-frame trace-diff vs the HTML at frozen tuning.** Steps 1–7 of the update (mode resolution, energy, caps, thrust/drag, steer magnitude) never see the frame; §2 is untouched. Nearest-sample queries are **windowed + progress-coherent** (±~40 samples, rescan fallback) — prerequisite for future overpasses, behavior-identical on flat.
+- **Fixed-tick:** Core simulates at a fixed 60 Hz accumulator (View interpolates) — deterministic replays are a **hard prerequisite for U4 recorded ghosts** and make the U2 trace-diff feasible.
 - **View:** `ShipView` renders the hull mesh + thruster; reads state, never writes.
 
 ### 7.3 `CombatSystem` (Core) + pooled `Projectile` (View)
@@ -208,7 +212,7 @@ Each maps a prototype module (`Afterburn_Prototype_Architecture.md §4`) to a Un
 
 ### 7.6 `GhostSystem` (Core)
 - **Launch approach:** async ghosts = **recorded loadout runs** replayed, *or* the prototype's synthetic curve-follower with an energy sim (skill band 0.80–0.90, boost on straights, coast to regen, fire at bounty leader in range). Ship both: synthetic ghosts for day-one filler, recorded ghosts as they accumulate.
-- **Record format:** per-frame input + loadout, deterministic playback. Zero netcode.
+- **Record format:** per-frame input + loadout, deterministic playback. Zero netcode. **Requires the fixed-tick Core sim (§7.2) — recorded before determinism exists = invalidated ghosts.** The record **carries the cosmetic loadout** (livery/trail/nameplate) — ghosts are the status billboard that gives cosmetics an audience (see `Afterburn_DesignReview.md`).
 
 ### 7.7 `BountySystem` (Core)
 - **Owns:** each frame mark the max-progress racer as leader; feed 2× reward to `CombatSystem`; expose leader energy to trailers for **Intel**.
@@ -274,7 +278,7 @@ Build in order. **Do not pass a gate without Seni's sign-off.**
 | Phase | Goal | **Acceptance gate** |
 |---|---|---|
 | **U1** | Inventory + skeleton: 3 assemblies, folders, 3 scenes, all SOs seeded (§5), object pool, input, chase camera, empty greybox arena | Project compiles; `Veratus/Afterburn/Create or Update SOs` produces all 8 data assets with frozen values; ship spawns and camera follows |
-| **U2** | **Core energy loop** on greybox Arena01: `EnergyCore` + `ShipController` + boost/fire/shield **mutual exclusion** + walls + lap logic | **Feels like the prototype.** Boost/shield/fire are mutually exclusive, regen only on coast, running dry feels bad. Side-by-side with the HTML at the frozen tuning — no drift |
+| **U2** | **Core energy loop** on greybox Arena01: `EnergyCore` + `ShipController` + boost/fire/shield **mutual exclusion** + walls + lap logic — **built 3D-track-frame + fixed-tick from day one (D6, §7.2)**, flat as the degenerate case | **Feels like the prototype.** Boost/shield/fire are mutually exclusive, regen only on coast, running dry feels bad. Side-by-side with the HTML at the frozen tuning — no drift; **flat-degeneracy asserted by trace-diff test** |
 | **U3** | Hulls + pilots as SOs, selectable pre-run; abilities + cooldowns; spec-gated shortcuts | Each hull wins a different scenario; each ability visibly swings a race; Light takes the gap, Heavy smashes the wall |
 | **U4** | Ghost system (synthetic + recorded), bounty, intel | Ghosts race believably with real loadouts; comebacks happen via bounty/intel, **no rubber-banding** |
 | **U5** | Front-end, HUD, **Safe Area on every root**, summary, dev tuning overlay | Full loop menu→race→summary→restart; "one more run" impulse present on device |
