@@ -215,7 +215,9 @@ Canvas **2796×1290, Match 0.5, landscape**. uGUI + TMP. **Safe Area component o
 |---|---|
 | **Boot** | `--surface-0`, centered studio mark (SVG sprite), progress hairline (`--stroke`→`--cyan`), auto-advance to MainMenu. No interaction. |
 | **MainMenu / Loadout** | Left 55%: 3D ship podium render (live hull + equipped cosmetics). Right 45%: **hull picker** (3 cards showing sidegrade copy + maxEnergy/regen/topSpeed bars from SO) and **pilot picker** (4 cards: ability name, copy, cooldown from SO). START (primary button, bottom-right). Top bar: Salvage balance, Store / Season / Settings / Game Center entry icons. |
+| **Pre-race Lineup** *(pass 3)* | Mandatory billboard (~4–8 s, skippable after 3 s): all 4 ships full-size, liveries + idling trails + plates/titles visible, hull + pilot labels. Every cosmetic seen every race by construction. |
 | **Race HUD** | §4.2 — the most specified screen in the game. |
+| **Podium** *(pass 3)* | Post-race, before Summary: top-3 finishers' ships rendered with full cosmetics + victory effects. The victory-effect SKU family gates on this screen existing. |
 | **Summary** | Finish place (`type-h1`), time + best-lap delta line ("0.4 s off your best lap"), stat row (shots/hits/bounty-hits/boost-time), Salvage earned with style-bonus breakdown, **exactly ONE next-goal chip** — three impulse hooks total, hard cap (U5 gate criterion). Buttons: **One more run** (primary), **Rematch** (same ghost seeds), Change loadout. |
 | **Settings** | Audio sliders, comfort toggles (FOV kick magnitude, shake on/off — ship conservative), control scheme, credits, restore purchases. List rows on `--surface-1`. |
 | **Store** | Cosmetics-only, direct visible prices, no hard currency. Category tabs: Liveries (Standard/Reactive/Prestige tiers) / Trails / Plates / Pilots. Cards show live preview render of the cosmetic on the equipped hull. Salvage-purchasable items show Salvage price; IAP items show local currency. Copy slot for "nothing you can buy makes you faster". |
@@ -331,6 +333,7 @@ All icons are authored as vector SVG by the build agent and imported to one UI s
 | 16 | HUD.prefab (energy-bar hero + full §4.2) | **U5** | Fill == `Ratio` same-frame audit; layout law; safe area |
 | 17 | Touch layout: left zone + energy-action wheel + ability button | U5 | Input-layer exclusion edit-mode test passes |
 | 18 | Component library + Boot/MainMenu/Loadout/Summary/Settings screens | U5 | Screens composed from library prefabs only; Summary = 3 hooks exactly |
+| 18b | **Pre-race Lineup + Podium screens** (the mandatory cosmetic billboard, §8½.2) | U5 | Every equipped cosmetic visible in both; lineup ≤ 8 s, skippable after 3 s; podium renders ghost-header cosmetics |
 | 19 | Motion pass (PrimeTween table) + icon set | U5 | §4.6 table; no tween on primary fill; §4.5 icon criteria |
 | 20 | Store + Season screens (scaffolding, cosmetics-only, no ads) | **U6** | SKU categories render; no hard currency; validator (#21) wired |
 | 21 | Cosmetic param block + reactive liveries + hue-distance validator | U6 | §3.4 criteria; validator fails violating test asset |
@@ -340,6 +343,41 @@ All icons are authored as vector SVG by the build agent and imported to one UI s
 | 25 | Arena03 Anchor Station: greybox → Reactor Violet + minimap elevation tint | Fast-follow | Over/under readable on minimap; §2.6 row criteria |
 
 ---
+
+## 8½. Amendments — 2026-07-09 pass 3 (battle-racer direction + audited economy)
+
+These amend §0/§3/§4 above; where they conflict, this section wins.
+
+1. **Ships are now a hybrid (D13, provisional).** §3.1's procedural hulls are superseded: the
+   three hulls are assembled from the **Ebal *Hi-Rez Spaceships Creator*** modular kit (bodies /
+   wings / engines / hardpoint weapons) — one recipe per hull class, silhouette law unchanged
+   (Light dart / Medium arrow / Heavy hammerhead readable at 100 u). The kit maps 1:1 onto the
+   D10 module-slot system: equipping an earned module swaps its visible kit part.
+   **Mandatory mobile pass:** ≤ 15k tris per assembled ship, textures downres'd to 1K ASTC,
+   module sets shared across hulls, LODs for rivals at range, materials converted to URP as
+   `.mat` assets (no runtime `Shader.Find`, §6 rule stands). **Gate 0: validate the kit's free
+   sample on device against the §5 contract before the €87 purchase.** SIGNAL VOID survives as
+   the world + UI language: PBR ships over the emissive code-built world (the Elite/Star Citizen
+   pairing). *Galactic Leopard* capital ship: Anchor Station backdrop only, purchase deferred.
+   The §1.1 "zero painted textures" pillar is amended to: **zero painted textures in world, UI,
+   and VFX; purchased hard-surface PBR permitted for ships and backdrop hero props only**, always
+   under the palette-role and readability laws.
+2. **Mandatory billboard screens** (§4.1 rows added): Pre-race Lineup + Podium. Cosmetics'
+   audience is by construction, not opt-in — deliverable 18b.
+3. **Reactive livery quantisation:** on non-owner views (rival ships, ghosts) reactive liveries
+   display only already-public states (boost/shield/fire); the sub-25% gutter state renders for
+   the owner and in post-race replay only. The §3.4 hue-distance validator gains this check.
+4. **In-race HUD themes are rejected as a SKU category, permanently.** No purchasable pixel
+   renders between Countdown and Finished. Front-end/menu/hangar themes only.
+5. **Slot housings** join §3.4's cosmetic hook points: per-slot finishes (engine/wing/hardpoint)
+   applying to stock and earned modules alike, inside a bounded silhouette envelope, with a
+   mandatory non-removable module identifier glyph. Reserved palette roles banned (existing law).
+6. **The frame-true VFX contract (§3.2/§3.3) binds every purchasable effect**: zero linger after
+   the state ends, occlusion envelope capped at the stock T2 trail, gameplay telegraphs always
+   render above cosmetic VFX.
+7. **New modes are UI-relevant later:** Battle Race (update 1) adds kill feed + pickup telegraph
+   language; Battle Mode (update 2) adds elimination UI. Both reuse this component library —
+   no new design language; specs land with their updates.
 
 ## 8. Footer
 

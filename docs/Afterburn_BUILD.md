@@ -38,6 +38,17 @@ This is written to be executed by a **Claude Code Unity build agent**, one gated
 
 > **Amended 2026-07-09 (design pass 2 — see `Afterburn_DesignReview.md`):** launch ships **one arena** (Arena01, flat — the kill-gate parity fixture), with **two full-3D arenas as fast-follow content updates** (D5). U2's physics is engineered **3D-track-frame from day one** with flat as the degenerate case (D6) so those arenas are data, not a rework. Game Center (iOS) lands first via the studio GameKit pattern; Play Games parity at U7 (D8).
 
+> **Amended 2026-07-09 (design pass 3 — D9–D13, see `Afterburn_DesignReview.md`):** identity is
+> **"3D space battle-racer."** Mode roadmap: **RACE** (ranked, pure — launch) → **BATTLE RACE**
+> (update 1: kill scoring + in-match world-spawn pickups obeying §2, never in ranked, never sold)
+> → **BATTLE MODE** LMS (update 2). Hulls gain **module slots** (engine/wing/hardpoint) — every
+> module a **sidegrade trade, earn-only** via teaching challenges; **XP unlocks content, never
+> stats** (D10/D11). The economy is the audited sell-vs-earn split in DesignReview §6 (D12):
+> *money buys how you look and who you fly as; play earns what your ship can do.* Ship art is a
+> provisional hybrid (D13): purchased PBR modular kit for hulls, code-built world/UI — pending
+> free-sample device validation. **Nothing in pass 3 touches §2, the frozen §5 values, or the U2
+> parity gate.**
+
 ---
 
 ## 2. The one rule that must not break

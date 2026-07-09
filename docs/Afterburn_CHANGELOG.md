@@ -9,6 +9,18 @@
 
 ---
 
+## 2026-07-09 — Session 6 (design pass 3 — battle-racer identity + audited economy)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `DESIGN` | **D9–D13 locked.** Identity = "3D space battle-racer"; mode roadmap RACE (launch) → BATTLE RACE (update 1, kill scoring + world-spawn pickups, never ranked/never sold) → BATTLE MODE LMS (update 2); **module slots** as earn-only sidegrades with teaching challenges; **XP unlocks content, never stats**; D13 provisional: hulls from the Ebal Hi-Rez PBR modular kit (free-sample device validation before purchase), world/UI stay code-built | Seni's original vision reconciled with the validated loop — the one self-defeating element (upgrades as raw power) re-engineered into visible ship-building |
+| `DESIGN` | **Economy audited and rewritten** (DesignReview §6): 3 adversarial auditors (P2W leak-hunter / economy pacing / revenue realist) found 2 catalog breaks — **season-pass pilot timing** (was a 3–4-week paid ranked head start; now same tier both tracks) and the **week-2 spender wall** (fixed via collections $12.99–14.99, supporter pack $9.99, announcer packs) — plus leaks now closed: reactive-livery gutter owner-only, slot housings with legality contract, bounty-hit Salvage capped 3/race, Cold Blood requires pre-final-lap dry-out, hull-equal style bonuses, pilots fixed at 3000 Salvage, pass never expires, FTUE colorway token | "Nothing you can buy makes you faster" survives line-item audit; sellable shelf now feeds the $30 fan past week 2 |
+| `UI` | **Mandatory cosmetic billboard:** pre-race Lineup + post-race Podium screens added to UIEnvSpec (deliverable 18b); in-race HUD themes rejected permanently; frame-true contract extended to all paid VFX | Cosmetics' audience by construction — the async-ghost status economy depends on it |
+
+**⏭ Next:** U1 gate sign-off still open · validate the Hi-Rez free sample on device (D13 gate 0) · then U2 under the D6 directive.
+
+---
+
 ## 2026-07-09 — Session 5 (design pass 2)
 
 | Type | Change | Rationale |

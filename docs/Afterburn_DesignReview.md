@@ -107,6 +107,16 @@ A15/60fps URP performance contract locked at U2.
 > D7 supersedes the panel's "one rewarded slot held in reserve" recommendation — the reserve is
 > **deleted**, not deferred. Zero ad SDK ships in any build, ever.
 
+### Pass 3 — locked later the same day (owner's original vision reconciled + economy audited)
+
+| # | Decision | Locked value |
+|---|---|---|
+| **D9** | Identity + modes | Afterburn is a **"3D space battle-racer."** Three-mode roadmap: **RACE** (ranked, pure, the validated energy loop — launch) → **BATTLE RACE** (update 1: kill scoring + in-match pickups) → **BATTLE MODE** last-man-standing (update 2, as D1 always deferred). **Pickups exist only in Battle Race**, only as in-world spawns obeying §2 (using an item is your action; nothing enables boost+shield), never inventoried, never purchasable |
+| **D10** | Ship module slots | Hulls gain **engine / wing / hardpoint slots**; every module is a **sidegrade trade** (e.g. +15 maxEnergy ↔ −15% regen). Modules are **earn-only** via mastery milestones + teaching challenges — the unlock teaches the mechanic it trades on. First module lands in session 1; a fully custom ship exists by ~hour 3 |
+| **D11** | Progression | **XP/mastery unlocks CONTENT, never stats** — modules, weapons, contracts, prestige cosmetics. Mastery/teaching challenges progress **only in ranked-normalised contexts** (`abilityCooldownScale = 1.0`) so purchased convenience can never accelerate them |
+| **D12** | Economy | The audited sell-vs-earn split in §6 (below) is canon. **The Law: money buys how you LOOK and who you FLY AS; play earns what your ship can DO.** Billboard surfaces (pre-race lineup + podium + ghost cosmetics) are mandatory-flow, not opt-in |
+| **D13** *(provisional)* | Ship art | Ships = **purchased PBR modular kit** (Ebal *Hi-Rez Spaceships Creator*: 16 bodies / 9 wings / 11 engines / 8 weapon modules — maps 1:1 onto D10's visible ship-building); world + UI stay code-built per `Afterburn_UIEnvSpec.md`. **Pending: free-sample validation on device against the §5 performance contract before the €87 purchase.** *Galactic Leopard* capital ship deferred to the Anchor Station backdrop |
+
 ---
 
 ## 4. Upgrade / Add / Change matrix
@@ -158,7 +168,10 @@ A15/60fps URP performance contract locked at U2.
 
 | Change | Pillar | Detail (concrete) | Risk note |
 |---|---|---|---|
+| **Battle Race mode (D9, update 1)** | Combat strategy | Kill scoring on the racing loop + **in-match pickups** (shield charges, ammo caches, one-time weapons) as world spawns obeying §2 — using an item is your action; nothing enables boost+shield. Pickups never inventoried, never sold. Ranked RACE mode stays pickup-free — the sanctuary of fairness | The chaotic fast-paced fantasy gets its own home instead of eroding the validated ranked loop |
+| **Battle Mode — last man standing (D9, update 2)** | Combat strategy | LMS on the same energy loop; shrinking play space; the D1 deferral honoured | Same systems, third mode — no new core surface |
 | Rear-drop mine (v1.1) | Combat strategy | Loadout choice **Bolt OR Mine** (one fire input): `EnergyCore.TrySpend(fireCost=20)`, blocked while boost/shield active, arm cadence ~1.0s, max 2 live per racer (pooled), TTL ~7s, damage 25 + spinout 0.7 (bolt parity), visible emissive pulse so it's dodgeable. Arms the leader; area-denies the Light gap; the natural counterplay to draft | Rail-locked ghosts can't dodge — requires a ghost lateral-dodge behaviour (lane-offset lerp when a mine is <25u ahead) before shipping. §2-safe: shares the existing fire spend path |
+| **Module slots system (D10/D11)** | Challenge / 3D world | Engine/wing/hardpoint slots; every module a sidegrade trade; earn-only via teaching challenges (§6.3 curve); XP reveals, challenge unlocks; slot housings are the cosmetic surface (§6.1) | Sidegrade legality per module uses the same ±10% parity accounting as hull projectiles; each module passes a mini balance gate before ranked |
 | Coast-amplifier pickups — flat orbs REJECTED | Challenge / 3D world | Ruling: flat +energy orbs violate the spirit of §2 (income must require disengaged vulnerability). Allowed form: pickup banks +50% regen for the next 4s of coasting — no energy on contact. 2–3 per lap, exclusively on risk lines (wall-scrape apexes, off-camber lines, inside shortcut zones); no same-lap respawn; GameTuning-exposed, **default off**; tuning flag reserved at U4 so recorded ghosts capture pickup lines | The recommendation most likely to erode the validated loop — judged against the U2 "running dry feels bad" criterion, never added to launch scope |
 | Level-1 3D: banking + elevation (D5 fast-follow tech; test scene pre-launch) | 3D world | TrackDefinition control points gain Y + per-sample roll baked into the up vector. Ship stays **glued to the ribbon** (`surface + 1.2·up`) so the longitudinal pipeline (thrust 55, drag 0.6, caps, boost ×1.40) runs unchanged in 1D — every frozen constant survives verbatim. **Slopes do NOT accelerate/decelerate grounded ships — no gravity in the speed pipeline; slopes are route and spectacle, not physics** (`ShipFeel.slopeAssist` constant, default 0, for future experiments only). Banking lets corner radii tighten below the flat 58u minimum. Camera up-vector smoothed separately, slerp ~2/s (vs 4/s position) | Gravity-on-slopes is the trap: it makes hull mass (0.8/1.0/1.4) a downhill speed stat — breaking frozen handling and ranked fairness. Glue + no-slope-force sidesteps all of it. Arena01 parity fixture protects the U2 gate forever |
 | Airtime: crests, ramps, gap jumps | 3D / Racing | Grounded/airborne state machine; launch only via ramp-lip zones flagged in TrackDefinition (explicit data, deterministic); airborne = ballistic under `ShipFeel.gravityAccel` ~35 u/s² (standard hop 0.6–1.0s); steering bite ×0.3 in air; landing misalignment reuses the ×0.92 scrape. **Boost entry refused while airborne** (ShipController-side gate, EnergyCore untouched) — air is a natural coast/regen window; the skill move is pre-lip boost for distance. Fire and shield stay legal midair | The largest §2-adjacent surface in the plan. Wrong rulings: boost-drains-midair-with-no-effect punishes held input; boost-thrusts-midair breaks the racing frame. Grounded-only entry keeps EnergyCore's authority intact |
@@ -186,57 +199,123 @@ A15/60fps URP performance contract locked at U2.
 
 ---
 
-## 6. IAP catalog (launch)
+## 6. The economy — sell vs earn (AUDITED, pass 3 canon)
 
-> **Hard requirement (blocking, U4):** the ghost record format **must carry the cosmetic
-> loadout** in its header. Cosmetics need an audience — in an async-ghost game the ghost/
-> leaderboard layer IS the status billboard; without it every item below is private and
-> near-worthless.
+> **Audit record (2026-07-09):** this section was adversarially audited by a 3-lens panel
+> (pay-to-win leak hunter · economy pacing auditor · revenue realist). The matrix held
+> structurally; **two catalog-breaking findings** (season-pass pilot timing; the week-2 spender
+> wall) and a set of drift-shaped leaks were found and are **fixed below**. This section
+> supersedes the pass-2 catalog.
 
-All SKUs are visible-price direct purchases under `com.veratusgames.afterburn.*`. Scaffolding +
-Unity Purchasing at U6; store listing at U7.
+**THE LAW: money buys how you LOOK and who you FLY AS — play earns what your ship can DO.**
+Store page carries the literal, checkable claim: **"nothing you can buy makes you faster."**
 
-| SKU family | Item | Price | Notes |
+> **Billboard hard requirements:** cosmetics need a mandatory audience, not an opt-in one.
+> (1) Ghost record header carries `{liveryId, trailId, plateId, housingIds}` (blocking, U4).
+> (2) **Pre-race lineup screen** — all 4 ships full-size, trails idling, plates showing (~4–8 s,
+> Mario-Kart-intro pattern) — and (3) **post-race podium** rendering the top-3 finishers' ships:
+> every cosmetic is seen 3+ times per race *by construction* (U5 screens; see UIEnvSpec).
+> Victory-effect SKUs gate on the podium existing; hangar themes gate on hangar inspection (U6+).
+
+### 6.1 SOLD — money-only (pure identity; `com.veratusgames.afterburn.*`; Unity Purchasing at U6)
+
+| SKU family | Item | Price | Audit-hardened terms |
 |---|---|---|---|
-| `livery.*` | Standard livery | $1.99 | Per-hull tints/patterns (Tier 2) |
-| `livery.*` | **Reactive livery** | $3.99 | Tier 4 — energy-state-responsive: emissive trim flares on boost, shimmers while shielding, pulses on a fired shot, gutters below 25% (matching the HUD red-line). Makes §2 mastery itself the status signal; a rival can read a reactive ghost's energy decisions at a glance. ShipView material driver reading EnergyCore state, read-only | 
-| `livery.*` | Prestige livery | $5.99 | Tier 6 — animated + unique trim, one per hull per season |
-| `trail.*` | Thruster trails | $0.99–$2.99 | **Visible only while boosting** — the trail literally advertises energy spend |
-| `plate.*` | Nameplates / badges | $0.99 | Shown on your ghost's tag and leaderboard rows |
-| `pack.founder` | Founder pack | $4.99 | One-time: exclusive livery + trail + 'Founder' plate + Salvage grant. **Permanently retired after the launch window — honest scarcity, stated up front, honoured forever** |
-| `pilot.nyx` | Pilot: Nyx | $2.99 | Dual-path: also earnable via ~3–4 hours of normal-play Salvage. Money buys time/variety, never exclusivity. One new pilot per season at $2.99–$3.99, same dual path; every new pilot passes a §2 mini kill-gate before art |
-| `pass.s01` | Season pass 'Circuits' | $4.99 | Post-launch only — see season structure below |
+| `livery.*` | Standard livery | $1.99 | Per-hull tints/patterns |
+| `livery.*` | **Reactive livery** | $3.99 | Energy-state-responsive trim. **Non-owner views (rivals, ghosts) are quantised to already-public states** (boost = thruster T2, shield = lattice, fire = muzzle); the sub-25% "gutter" renders **owner + post-race replay only** — it would otherwise leak fuel-gauge intel the leader is denied (§7.7) and adversely select top ghosts back to stock |
+| `livery.*` | Prestige livery | $5.99 | Animated + unique trim, one per hull per season |
+| `housing.*` | **Slot housings** | $1.99–$3.99 | **Per-SLOT finishes (engine/wing/hardpoint), apply to stock loadouts too** — market exists day one. Legality contract: bounded silhouette envelope, mandatory module identifier glyph, never alters hull-class signature |
+| `trail.*` | Thruster trails | $0.99–$2.99 | Render only while boosting — the purchase advertises energy spend |
+| `plate.*` | Nameplates / badges | $0.99 | Ghost tags + leaderboard rows |
+| `audio.*` | Announcer packs | $2.99 | Highest-attachment racing audio SKU; **identical callout triggers/timing/info across packs**. Engine audio skins $0.99 (re-timbre only; state stings preserved) |
+| `fx.*` | Victory/podium effects | $0.99–$1.99 | **Ships only after the podium screen exists** — until then it sells to an empty theater |
+| `theme.*` | Front-end/hangar themes | $1.99 | Menus + hangar only. **In-race HUD themes are REJECTED as a category, permanently** — HUD colors are information; no purchasable pixel renders between Countdown and Finished |
+| `bundle.*` | **Collections** | $12.99–$14.99 | Reactive set across 3 hulls (~$16.94 itemised → $12.99); seasonal Prestige collection ($17.97 → $14.99). Bundle rules: pure cosmetics, every component also sold separately, never contain Salvage or cooldown levels |
+| `pack.supporter` | **Supporter pack** | $9.99 | Plate + badge + hangar banner, described verbatim as "this funds development; it contains nothing else" — the tip jar the fairness contract earns |
+| `pack.founder` | Founder pack | $4.99 | Cosmetics + **Salvage grant fixed at 1200–1500** (~half a pilot — never substitutes for one). Permanently retired after launch window; honoured forever |
+| `pass.s01` | Season pass 'Circuits' | $4.99 | See 6.4 — **never expires**, pilot parity on both tracks |
 
-**Explicitly absent, permanently:** no hard currency · no gacha/loot boxes · no timers · no
-run-limiting energy system (the game's Energy is a mechanic, never a meter you buy) ·
-**NO ADS (D7 — no ad SDK ships, ever; the panel's reserved rewarded slot is deleted)** · no
-tier-skip purchases · no premium+ pass edition · cooldown levels never appear in any IAP, bundle,
-or pass paid-track.
+### 6.2 DUAL-PATH — money = time saved, never exclusivity, never a skipped skill gate
 
-**Soft currency — Salvage (single currency, no hard-currency layer).** Earn per race: base 20 +
-placement (P1 +30 / P2 +20 / P3 +10) + style bonuses paid for what the game is about: +5 per
-bounty hit, +5 per spec-gated shortcut taken, +10 'Cold Blood' (win a race in which you hit 0
-energy), +5 'Clean Coast' (zero wall scrapes). Deliberately NO bonus for boost-time or
-shots-fired — paying for raw activity teaches players to fight the energy rule. Sinks: Nyx and
-future pilots, pilot cooldown levels (casual-only), standard liveries/colorways (500–1500
-Salvage). First-run FTUE grants enough for one colorway so the store reads generous before it
-asks.
+- **Pilots: fixed 3000 Salvage (~3 hours at median rates) or $2.99–$3.99.** Written law: **money
+  waives the Salvage price, never a challenge** — no pilot is ever mastery-gated behind a wall
+  money can skip. Every new pilot passes a §2 mini kill-gate before art; **any tuning buff to a
+  purchasable pilot re-runs the mini-gate** (paid-power-by-patch is the drift mode).
+- **Standard colorways: 400 / 700 / 1000 Salvage** (one / one-and-a-half / two sessions) — the
+  whole band stays below ⅓ of a pilot so the two sinks never share a mental account.
+- **Measured invariant, re-verified every season via telemetry:** every money-purchasable gameplay
+  item is earnable in **≤ 4 hours at the median player earn rate**.
 
-**The pay-to-win firewall (mechanical, not editorial):** pilot upgrades = 5 levels, −4%
-`cooldownSec` per level (max −20%; Sora floors at 12s), **Salvage-only**. Ranked contexts run
-every racer at `abilityCooldownScale = 1.0` and base `cooldownSec` via a RaceContext flag. The
-store page can carry "nothing you can buy makes you faster" as a literal, checkable claim — that
-IS the marketing. Drift (a bundle quietly including cooldown levels) is the failure mode: it is
-an explicit U6 acceptance line and a standing content-review rule.
+### 6.3 EARN-ONLY — collectable/unlockable; cannot be bought at any price
 
-**Season structure — 'Circuits':** 6-week cosmetic pass, 30 tiers, $4.99 flat. FREE track:
-Salvage, one standard livery, one trail, the season pilot at tier 28 (free players get everything
-competitive). PAID track: the season's Prestige + reactive livery, exclusive plate, the season
-pilot at tier 8 (earlier, never exclusively). Progress via weekly objectives (8–10/week,
-retroactively completable — a lapsed week is recoverable; no login streaks). **Anti-FOMO rule,
-stated publicly:** all pass cosmetics enter the direct store two seasons later at standard
-pricing; only the season plate stays exclusive (pure status, zero content). First Circuit ~4–6
-weeks post-launch; pass plumbing (entitlements/receipts) designed at U6.
+- **Hull modules (D10):** mastery milestones *reveal* (Summary next-goal chip), teaching
+  challenges *unlock* — every challenge completable inside normal racing. Curve: **M1 hour 0.5**
+  (engine 'Deep Cycle', +15 maxEnergy ↔ −15% regen — challenge: "spend 40%+ of one race
+  coasting"), M2 hour 1.5 (wing 'Feather'), M3 hour 3 (hardpoint 'Long Bolt') → **fully custom
+  ship by hour 3**; M4–M8 through ~hour 12. Slot order engine→wing→hardpoint.
+- **Alternate weapons** (rear-mine v1.1, future): mastery milestones.
+- **Battle Race pickups (D9):** in-match world spawns only — never inventoried, never sold, no
+  consumable packs, not even once.
+- **Achievement plates/titles** (Kingslayer…), league emblems, **medal-gated cosmetics** (beat
+  the author time → exclusive livery), per-hull prestige mastery skins.
+- **Arena access: free for everyone, always** — paid arenas would split the ghost pool.
+- **Season pass FREE track** carries every gameplay-relevant item at the same tier as paid (6.4).
+
+### 6.4 Season structure — 'Circuits' (audit-corrected)
+
+30 tiers / 6 weeks / $4.99. **The pass never expires** — once bought, its objectives remain
+completable in any later season (one pass active at a time). This deletes the genre's last hidden
+timer; there is no catch-up SKU because none is needed (tier skips are banned anyway).
+**The season pilot sits at the SAME tier on BOTH tracks (~tier 25)** — the paid track carries
+that pilot's *cosmetics* (prestige skin, plate) instead of early access; tier-8-paid access was a
+3–4 week ranked head start across zero-sum weekly boards and is the one true P2W break the audit
+found. 10 weekly objectives (retroactively completable; two lapsed weeks recoverable); **any
+single race can advance ≥ 3 objectives** so 3-session/week players finish the free pilot before
+season end. Anti-FOMO rule stands: pass cosmetics enter the direct store two seasons later; only
+the season plate stays exclusive.
+
+### 6.5 Salvage economics (audit-corrected numbers)
+
+Canonical loop: **2.5 min door-to-door** (~22–26 races/hr) → decent play earns **~900–1400/hr**
+(the pass-2 sheet was calibrated 30–40% low). Per race: **base 20** + placement (P1 +30 / P2 +20
+/ P3 +10) + style bonuses:
+
+| Bonus | Value | Audit fix |
+|---|---|---|
+| Bounty hits | +5 each, **capped at 3/race** | Uncapped, vulturing the rail-locked leader out-earned winning (10–14 hits ≈ +50–70) — the exact "pay for raw activity" failure §6 bans |
+| Spec-gated shortcut | +5, **once per race, only via your own hull's `gateAccess`** (Sora phase counts as LightGap) | Was structurally unequal: Light could earn +15, Medium 0 forever |
+| 'Racing Line' | +5 — no shortcut taken, every checkpoint above 55 u/s | **New**: gives Medium an equal style-bonus ceiling |
+| 'Cold Blood' | +10 — hit 0 energy **before the final lap** and still win | Was satisfiable by ritual dry-out at the finish line; now it's a recovery story |
+| 'Clean Coast' | +5 — zero wall scrapes | Unchanged |
+
+No bonus for boost-time or shots-fired, ever. **'First Flight' daily (first 3 races ×2) applies
+to base + placement only** — never style bonuses. From Arena02 onward, base + placement scale
+with **arena par time** (base = 8 × par-minutes) so the shortest arena never becomes the farm.
+**FTUE:** a **free-pick colorway token** (any tier — a gift, not exact change) delivered on the
+first Summary screen, plus a 250 Salvage seed so the wallet shows progress toward the next item.
+
+### 6.6 The pay-to-win firewall (mechanical, not editorial — each line is a U6/U7 acceptance test)
+
+Pilot cooldown upgrades: 5 levels, −4%/level (max −20%; Sora floors at 12 s), **Salvage-only**,
+ranked-normalised via the RaceContext flag (`abilityCooldownScale = 1.0`, base `cooldownSec`).
+Plus, verbatim, permanently:
+
+- No hard currency · no gacha/loot boxes · no timers · no run-limiting energy · **no ads (D7)** ·
+  no tier skips · no premium+ pass · cooldown levels never in any IAP, bundle, or pass track.
+- **No earn-only item (module, weapon, mastery cosmetic) ever carries a Salvage price; Salvage
+  never appears on a paid pass track.** (Closes: money → founder Salvage → earn-only items.)
+- **Mastery/teaching challenges progress only in ranked-normalised contexts** — bought cooldown
+  convenience cannot accelerate module unlocks.
+- **The frame-true VFX contract binds every purchasable effect**: state-bound on/off with zero
+  linger; occlusion envelope capped at the stock T2 trail; gameplay telegraphs (mine pulse, Decoy
+  no-flame tell, EMP windup) always render above cosmetic VFX.
+- **Reserved palette roles (gold = leader, red = damage) are banned in all purchasable cosmetics**
+  (hue-distance validator); housings keep the module identifier glyph.
+- **No purchasable pixel renders during race states** (Countdown → Finished).
+- **Store-catalog lint at every release:** no SKU/bundle references cooldown or stat tables; no
+  Salvage price on earn-only item IDs; no Salvage on paid pass tracks.
+- Gifting: deferred until recorded-ghost sharing exists (no social graph, no server, no native
+  App Store gifting — disproportionate fraud surface for a solo dev pre-U7).
 
 ---
 
@@ -269,7 +348,7 @@ tracked (shots / hits / bountyHits / boostTime / energy events / leader flag).
 |---|---|---|
 | Onboarding | Ignition | Finish first race |
 | Onboarding | Checkered Flare | First win |
-| Energy | Dry Tank | Hit 0 energy mid-race and still win |
+| Energy | Dry Tank | Hit 0 energy **before the final lap** and still win (aligned with the 'Cold Blood' Salvage bonus — same recovery story, §6.5) |
 | Energy | Perpetual Motion | Win without dropping below the 25% red-line |
 | Energy | Feathered Throttle | Win with <10s total boost |
 | Energy | The Long Coast | Regen from <10% to full in one race |
