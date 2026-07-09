@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d92743b23b0114c5db7fcbedcbda1b2e, type: 3}
+  m_Name: Kade
+  m_EditorClassIdentifier: Afterburn.Core::Afterburn.Core.PilotDefinition
+  displayName: Kade
+  abilityName: Siphon
+  cooldownSec: 20
+  abilityType: 2
+  abilityParam: 25
+  abilityRadius: 0
+  description: Your next hit steals 25 energy.

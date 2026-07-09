@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 465b1e3afdb344670a0a644aaf06f88b, type: 3}
+  m_Name: Arena01
+  m_EditorClassIdentifier: Afterburn.Core::Afterburn.Core.TrackDefinition
+  displayName: Arena 01
+  controlPoints:
+  - {x: 300, y: 0, z: 0}
+  - {x: 254.07321, y: 0, z: 122.35522}
+  - {x: 145.8966, y: 0, z: 182.94856}
+  - {x: 49.39963, y: 0, z: 216.43399}
+  - {x: -61.415783, y: 0, z: 269.0801}
+  - {x: -198.26974, y: 0, z: 248.6224}
+  - {x: -297.31973, y: 0, z: 143.1816}
+  - {x: -258, y: 0, z: -0.000022555078}
+  - {x: -194.60928, y: 0, z: -93.718895}
+  - {x: -153.37845, y: 0, z: -192.33058}
+  - {x: -68.09143, y: 0, z: -298.32794}
+  - {x: 72.09682, y: 0, z: -315.87665}
+  - {x: 172.08325, y: 0, z: -215.78545}
+  - {x: 227.04414, y: 0, z: -109.33871}
+  catmullTension: 0.5
+  sampleCount: 700
+  baseRadius: 300
+  radiusShape:
+  - 1
+  - 0.94
+  - 0.78
+  - 0.74
+  - 0.92
+  - 1.06
+  - 1.1
+  - 0.86
+  - 0.72
+  - 0.82
+  - 1.02
+  - 1.08
+  - 0.92
+  - 0.84
+  halfWidth: 17
+  wallHeight: 3.2
+  checkpointFractions: []
+  shortcuts:
+  - access: 1
+    fromFraction: 0.2
+    toFraction: 0.24
+    extraInnerAllowance: 20
+    side: 1
+  - access: 2
+    fromFraction: 0.61
+    toFraction: 0.66
+    extraInnerAllowance: 22
+    side: 1

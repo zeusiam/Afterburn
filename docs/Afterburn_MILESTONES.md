@@ -50,7 +50,7 @@
 | ID | Milestone | Status |
 |---|---|---|
 | U0 | `Afterburn_BUILD.md` gated handoff written | ✅ 2026-07-09 |
-| U1 | Phase 0 inventory + skeleton signed off | 🔨 started 2026-07-09 (Unity 6000.4.4f1 · landscape · repo + backup wired) |
+| U1 | Phase 0 inventory + skeleton signed off | 🔨 **built + verified 2026-07-09 — AWAITING SENI SIGN-OFF** (compiles clean, 9 SOs seeded idempotently, 15/15 tests, ship+camera in Race.unity) |
 | U2 | Core energy loop in Unity | ⬜ |
 | U3 | Hulls + pilots as ScriptableObjects | ⬜ |
 | U4 | Ghost system | ⬜ |
@@ -80,3 +80,4 @@
 | 2026-07-09 | **Playable prototype built (P0–P6) in `Afterburn_Prototype.html`** and verified functional (zero console errors, full race loop, boost/energy/combat confirmed). Fixed a start-line track cusp; softened wall collision; nerfed ghost AI | **Seni: play it and rule on the P2 kill gate.** Then either freeze `GameTuning` values + write the Unity handoff, or tune/kill |
 | 2026-07-09 | **P2 KILL GATE PASSED — Seni approved the concept.** Design lock (D1–D4) closed; tuning frozen; **gated Unity handoff written (`Afterburn_BUILD.md`, U0 ✅).** | Confirm Unity version + orientation + repo/backup (BUILD §12), then hand `Afterburn_BUILD.md` to the Unity build agent and execute **U1** (skeleton + SO seeder), stopping at its gate |
 | 2026-07-09 | **All §12 inputs resolved by Seni** (repo `zeusiam/Afterburn`, backup on Veratus Group volume, Unity **6000.4.4f1**, **landscape**, synthetic+recorded ghosts). **U1 started:** repo initialised, UnityProject scaffolded | Finish U1 skeleton, run gate verification (compile + 8 SOs seeded + ship spawns/camera follows), back up, **stop for Seni's U1 sign-off** |
+| 2026-07-09 | **U1 built + verified.** Skeleton complete (asmdefs, SOs + seeder, pool, input, chase cam, greybox Arena01 + ship, 3 scenes); `Afterburn_PortSpec.md` written (16 divergences logged for U2 rulings); zero compile errors, 9 SOs seeded (idempotent re-run 0/9/0), 15/15 edit-mode tests incl. spline parity; adversarial review — 6 findings fixed. Committed + backed up | **Seni: open Race.unity, press Play, sign off U1.** Then U2: EnergyCore + ShipController + mutual exclusion (kill-gate re-validation vs prototype) |
