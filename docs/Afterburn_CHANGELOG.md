@@ -9,6 +9,16 @@
 
 ---
 
+## 2026-07-10 — Session 13 (project tracking system)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `DOCS` | **Tracking system stood up** (Seni's ask): `Afterburn_TRACKING.md` (index + protocol) · `Afterburn_BUGS.md` (seeded: 3 open, 12 fixed-archive) · `Afterburn_REVISIT.md` (**29 consolidated parked items** harvested from every doc + session — the don't-forget file) · `Afterburn_STATE.md` (living snapshot, refresh each session) · `Afterburn_SWEEPLOG.md` (9 sweeps recorded + not-yet-swept candidates + protocol) · root **`CLAUDE.md`** (laws, protocol, verification — binds every future agent session) | Loose threads now have exactly one home each; sweeps can't repeat; sessions can't forget |
+
+**⏭ Next:** editor close → headless suite (BUG-015, expect 76) · Seni: reseed v2 gate lane + play · then R-19 (icons/audio) or R-20 (TrackRibbon).
+
+---
+
 ## 2026-07-10 — Session 12 (D15.1 — the gate lane: Wipeout-with-a-twist)
 
 | Type | Change | Rationale |
