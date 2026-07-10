@@ -60,3 +60,49 @@ MonoBehaviour:
     toFraction: 0.66
     extraInnerAllowance: 22
     side: 1
+  gateFeatures:
+  - type: 0
+    fraction: 0.115
+    lateralOffset: 0
+    halfSpan: 8
+    surgeCapMult: 1.25
+    surgeImpulse: 12
+    surgeDuration: 1.2
+    blockerDamage: 15
+    blockerSpeedMult: 0.85
+  - type: 2
+    fraction: 0.315
+    lateralOffset: -4
+    halfSpan: 6
+    surgeCapMult: 1.25
+    surgeImpulse: 12
+    surgeDuration: 1.2
+    blockerDamage: 15
+    blockerSpeedMult: 0.85
+  - type: 0
+    fraction: 0.44
+    lateralOffset: 0
+    halfSpan: 8
+    surgeCapMult: 1.25
+    surgeImpulse: 12
+    surgeDuration: 1.2
+    blockerDamage: 15
+    blockerSpeedMult: 0.85
+  - type: 2
+    fraction: 0.55
+    lateralOffset: 5
+    halfSpan: 6
+    surgeCapMult: 1.25
+    surgeImpulse: 12
+    surgeDuration: 1.2
+    blockerDamage: 15
+    blockerSpeedMult: 0.85
+  - type: 1
+    fraction: 0.75
+    lateralOffset: 0
+    halfSpan: 8
+    surgeCapMult: 1.6
+    surgeImpulse: 30
+    surgeDuration: 2
+    blockerDamage: 15
+    blockerSpeedMult: 0.85

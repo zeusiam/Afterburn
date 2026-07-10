@@ -132,8 +132,7 @@ namespace Afterburn.View
                 float targetWidth = f.halfSpan * 2f;
                 if (featureGatePrefab != null)
                 {
-                    ring = Instantiate(featureGatePrefab, transform);
-                    foreach (Collider collider in ring.GetComponentsInChildren<Collider>()) Destroy(collider);
+                    ring = ViewPrefabs.InstantiateWithoutColliders(featureGatePrefab, transform);
                     Renderer[] renderers = ring.GetComponentsInChildren<Renderer>();
                     if (renderers.Length > 0)
                     {
@@ -171,9 +170,8 @@ namespace Afterburn.View
                 float a = i / (float)count * Mathf.PI * 2f + 0.4f;
                 Vector3 pos = new Vector3(Mathf.Cos(a) * radius, 25f + (i % 3) * 30f, Mathf.Sin(a) * radius);
 
-                GameObject gate = Instantiate(prefab, transform);
+                GameObject gate = ViewPrefabs.InstantiateWithoutColliders(prefab, transform);
                 gate.name = $"ScenicGate{i}";
-                foreach (Collider collider in gate.GetComponentsInChildren<Collider>()) Destroy(collider);
                 gate.transform.position = pos;
                 gate.transform.rotation = Quaternion.LookRotation((-pos).normalized, Vector3.up)
                                           * Quaternion.Euler(0f, (i * 47f) % 90f - 45f, 0f);
@@ -297,12 +295,8 @@ namespace Afterburn.View
             {
                 // D13 fleet: a real warp gate spans the start line. Auto-fit its bounds to the
                 // configured span, base resting on the road, opening facing the direction of travel.
-                GameObject gate = Instantiate(startGatePrefab, transform);
+                GameObject gate = ViewPrefabs.InstantiateWithoutColliders(startGatePrefab, transform);
                 gate.name = "StartGate";
-                foreach (Collider collider in gate.GetComponentsInChildren<Collider>())
-                {
-                    Destroy(collider);                      // collision stays the analytic clamp
-                }
 
                 Renderer[] renderers = gate.GetComponentsInChildren<Renderer>();
                 Vector3 anchor = new Vector3(s0.Pos.x, 0f, s0.Pos.z) + s0.Tan * gateForwardOffset;

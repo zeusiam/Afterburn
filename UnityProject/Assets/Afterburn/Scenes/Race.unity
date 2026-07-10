@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &217864178
+--- !u!1 &399339603
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,257 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 217864180}
-  - component: {fileID: 217864179}
-  m_Layer: 0
-  m_Name: RaceFlow
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &217864179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 217864178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5769244729e5e46e6803ee613a8d261d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Afterburn.UI::Afterburn.UI.RaceFlowController
-  runner: {fileID: 1552006969}
-  raceCamera: {fileID: 807497802}
---- !u!4 &217864180
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 217864178}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &523680577
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 523680579}
-  - component: {fileID: 523680578}
-  m_Layer: 0
-  m_Name: Track
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &523680578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 523680577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db23c8cc3e474c879d91c43d6a1f48f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.TrackView
-  track: {fileID: 11400000, guid: d236a34ba5eff4574a810694bcc09b2f, type: 2}
-  startGatePrefab: {fileID: 1767623377375070, guid: e54c1127358b6aa4c809943c256c8d8b, type: 3}
-  gateSpanWidth: 46
---- !u!4 &523680579
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 523680577}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &607007925
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 607007927}
-  - component: {fileID: 607007926}
-  m_Layer: 0
-  m_Name: Starfield
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &607007926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 607007925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b289b3a297f2c4eb0ba7c0c9e0bb2292, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.StarfieldView
---- !u!4 &607007927
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 607007925}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &807497801
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 807497805}
-  - component: {fileID: 807497802}
-  - component: {fileID: 807497804}
-  - component: {fileID: 807497803}
-  m_Layer: 0
-  m_Name: Main Camera
-  m_TagString: MainCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!20 &807497802
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807497801}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.019607844, g: 0.02745098, b: 0.05882353, a: 1}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.5
-  far clip plane: 2000
-  field of view: 62
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!114 &807497803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807497801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14b8d3a531013471dbef90176c3c277d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.ChaseCamera
-  target: {fileID: 1241754049}
-  followBehind: 16
-  followHeight: 9
-  positionLerpRate: 4
-  lookAhead: 10
-  lookHeight: 2
-  fieldOfView: 62
---- !u!81 &807497804
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807497801}
-  m_Enabled: 1
---- !u!4 &807497805
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807497801}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.13090217, y: 0.056953754, z: -0.007532736, w: 0.98972934}
-  m_LocalPosition: {x: 298.16464, y: 9, z: -15.894385}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1241754048
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1241754049}
-  - component: {fileID: 1241754050}
+  - component: {fileID: 399339604}
+  - component: {fileID: 399339605}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -385,13 +136,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1241754049
+--- !u!4 &399339604
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1241754048}
+  m_GameObject: {fileID: 399339603}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.05744964, z: 0, w: 0.9983484}
   m_LocalPosition: {x: 300, y: 1.2, z: 0}
@@ -400,20 +151,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1241754050
+--- !u!114 &399339605
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1241754048}
+  m_GameObject: {fileID: 399339603}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9542fbc7bfe4445598a202aec37e5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Afterburn.View::Afterburn.View.ShipGreybox
   hull: {fileID: 11400000, guid: 4997ac59b26034e6dbe3335adfdd20e2, type: 2}
---- !u!1 &1310703584
+--- !u!1 &493165898
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -421,8 +172,159 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1310703586}
-  - component: {fileID: 1310703585}
+  - component: {fileID: 493165900}
+  - component: {fileID: 493165899}
+  m_Layer: 0
+  m_Name: Track
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &493165899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493165898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db23c8cc3e474c879d91c43d6a1f48f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.TrackView
+  track: {fileID: 11400000, guid: d236a34ba5eff4574a810694bcc09b2f, type: 2}
+  startGatePrefab: {fileID: 1767623377375070, guid: e54c1127358b6aa4c809943c256c8d8b, type: 3}
+  gateSpanWidth: 46
+  gateMaxExtent: 55
+  gateForwardOffset: 22
+  featureGatePrefab: {fileID: 1843535335278324, guid: 531800b2e8d70ca4bb1deb46481b1124, type: 3}
+  scenicGatePrefabs:
+  - {fileID: 1780172877994662, guid: a148efef50951a543a7454f855a15adf, type: 3}
+  - {fileID: 1649596675849860, guid: bb64e92bf353bc34396924ab3fdfbba0, type: 3}
+  - {fileID: 1639511012427598, guid: d6353af3d90b6cf44aa4c8c0794fbfa8, type: 3}
+--- !u!4 &493165900
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493165898}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &496519586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 496519588}
+  - component: {fileID: 496519587}
+  m_Layer: 0
+  m_Name: Starfield
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &496519587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496519586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b289b3a297f2c4eb0ba7c0c9e0bb2292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.StarfieldView
+--- !u!4 &496519588
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496519586}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1528085342
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1528085344}
+  - component: {fileID: 1528085343}
+  m_Layer: 0
+  m_Name: RaceRunner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1528085343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528085342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cd63fd2f3ec4a6d9646d9e3a071b06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.RaceRunner
+  track: {fileID: 11400000, guid: d236a34ba5eff4574a810694bcc09b2f, type: 2}
+  tuning: {fileID: 11400000, guid: 49ac30cc5d5f74f11ba0201a17e7e0ad, type: 2}
+  playerHull: {fileID: 11400000, guid: 4997ac59b26034e6dbe3335adfdd20e2, type: 2}
+  playerPilot: {fileID: 11400000, guid: 04c92b58aeabb42aab60d26f4978901d, type: 2}
+  heavyHull: {fileID: 11400000, guid: adf6e2679560348689103a8abe0f8de6, type: 2}
+  lightHull: {fileID: 11400000, guid: 2a35d7e08a66a4a8ebdf1ac4c9aa8c93, type: 2}
+  mediumHull: {fileID: 11400000, guid: 4997ac59b26034e6dbe3335adfdd20e2, type: 2}
+  shipTransform: {fileID: 399339604}
+  trackView: {fileID: 493165899}
+--- !u!4 &1528085344
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528085342}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1666554867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1666554869}
+  - component: {fileID: 1666554868}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -430,13 +332,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!108 &1310703585
+--- !u!108 &1666554868
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310703584}
+  m_GameObject: {fileID: 1666554867}
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
@@ -495,13 +397,13 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!4 &1310703586
+--- !u!4 &1666554869
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310703584}
+  m_GameObject: {fileID: 1666554867}
   serializedVersion: 2
   m_LocalRotation: {x: -0.21496803, y: 0.7848632, z: -0.40167144, w: -0.42004603}
   m_LocalPosition: {x: 120, y: 200, z: 80}
@@ -510,7 +412,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1552006968
+--- !u!1 &1862046844
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -518,46 +420,151 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1552006970}
-  - component: {fileID: 1552006969}
+  - component: {fileID: 1862046846}
+  - component: {fileID: 1862046845}
   m_Layer: 0
-  m_Name: RaceRunner
+  m_Name: RaceFlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1552006969
+--- !u!114 &1862046845
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1552006968}
+  m_GameObject: {fileID: 1862046844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6cd63fd2f3ec4a6d9646d9e3a071b06, type: 3}
+  m_Script: {fileID: 11500000, guid: 5769244729e5e46e6803ee613a8d261d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.RaceRunner
-  track: {fileID: 11400000, guid: d236a34ba5eff4574a810694bcc09b2f, type: 2}
-  tuning: {fileID: 11400000, guid: 49ac30cc5d5f74f11ba0201a17e7e0ad, type: 2}
-  playerHull: {fileID: 11400000, guid: 4997ac59b26034e6dbe3335adfdd20e2, type: 2}
-  playerPilot: {fileID: 11400000, guid: 04c92b58aeabb42aab60d26f4978901d, type: 2}
-  heavyHull: {fileID: 11400000, guid: adf6e2679560348689103a8abe0f8de6, type: 2}
-  lightHull: {fileID: 11400000, guid: 2a35d7e08a66a4a8ebdf1ac4c9aa8c93, type: 2}
-  mediumHull: {fileID: 11400000, guid: 4997ac59b26034e6dbe3335adfdd20e2, type: 2}
-  shipTransform: {fileID: 1241754049}
-  trackView: {fileID: 523680578}
---- !u!4 &1552006970
+  m_EditorClassIdentifier: Afterburn.UI::Afterburn.UI.RaceFlowController
+  runner: {fileID: 1528085343}
+  raceCamera: {fileID: 1911435874}
+--- !u!4 &1862046846
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1552006968}
+  m_GameObject: {fileID: 1862046844}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1911435873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1911435877}
+  - component: {fileID: 1911435874}
+  - component: {fileID: 1911435876}
+  - component: {fileID: 1911435875}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!20 &1911435874
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911435873}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.019607844, g: 0.02745098, b: 0.05882353, a: 1}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.5
+  far clip plane: 2000
+  field of view: 62
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!114 &1911435875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911435873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b8d3a531013471dbef90176c3c277d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Afterburn.View::Afterburn.View.ChaseCamera
+  target: {fileID: 399339604}
+  followBehind: 16
+  followHeight: 9
+  positionLerpRate: 4
+  lookAhead: 10
+  lookHeight: 2
+  fieldOfView: 62
+--- !u!81 &1911435876
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911435873}
+  m_Enabled: 1
+--- !u!4 &1911435877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911435873}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.13090217, y: 0.056953754, z: -0.007532736, w: 0.98972934}
+  m_LocalPosition: {x: 298.16464, y: 9, z: -15.894385}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -567,10 +574,10 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1310703586}
-  - {fileID: 523680579}
-  - {fileID: 607007927}
-  - {fileID: 1241754049}
-  - {fileID: 1552006970}
-  - {fileID: 807497805}
-  - {fileID: 217864180}
+  - {fileID: 1666554869}
+  - {fileID: 493165900}
+  - {fileID: 496519588}
+  - {fileID: 399339604}
+  - {fileID: 1528085344}
+  - {fileID: 1911435877}
+  - {fileID: 1862046846}

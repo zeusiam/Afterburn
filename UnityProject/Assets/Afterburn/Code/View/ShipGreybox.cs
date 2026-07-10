@@ -62,13 +62,8 @@ namespace Afterburn.View
         /// </summary>
         private void BuildFromPrefab(GameObject prefab)
         {
-            GameObject visual = Instantiate(prefab, transform);
+            GameObject visual = ViewPrefabs.InstantiateWithoutColliders(prefab, transform);
             visual.name = "HullVisual";
-
-            foreach (Collider collider in visual.GetComponentsInChildren<Collider>())
-            {
-                Destroy(collider);                          // collision is the analytic clamp, never physics
-            }
 
             // Auto-fit: uniform scale so the forward (z) length ≈ 5 u, recentred on the sim origin.
             Renderer[] renderers = visual.GetComponentsInChildren<Renderer>();
