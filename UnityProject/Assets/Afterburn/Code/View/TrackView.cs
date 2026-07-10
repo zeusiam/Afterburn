@@ -32,6 +32,10 @@ namespace Afterburn.View
                  "spawns outside it and flies through on launch (0 = centred on the line).")]
         [SerializeField] private float gateForwardOffset = 22f;
 
+        [Tooltip("Height of the gate's visual centre — wraps the ring around the track like a " +
+                 "bridge instead of resting its base on the road.")]
+        [SerializeField] private float gateCenterHeight = 12f;
+
         [Tooltip("D15 gate-feature ring visual (small warp gate) — auto-fitted per feature. " +
                  "Null = procedural rings.")]
         [SerializeField] private GameObject? featureGatePrefab;
@@ -106,30 +110,58 @@ namespace Afterburn.View
             BuildScenicRing();
         }
 
+        /// <summary>Per-type ghost color (D15.1): collectables cool, obstacles hot; red = damage only.</summary>
+        private static string GateHex(GateFeatureType type) => type switch
+        {
+            GateFeatureType.WarpSurge => "#9D7BFF",
+            GateFeatureType.Photon => "#38F5C9",
+            GateFeatureType.Overdrive => "#FFE14D",
+            GateFeatureType.Barrier or GateFeatureType.Armor => "#37D0FF",
+            GateFeatureType.Electric => "#FFD23F",
+            GateFeatureType.ReverseWarp => "#FF8A3C",
+            GateFeatureType.Shredder or GateFeatureType.Mine or GateFeatureType.Blocker => "#FF4D6D",
+            _ => "#37D0FF",
+        };
+
         /// <summary>
-        /// D15 gate features: a ring per feature at its track fraction, color-coded by type —
-        /// boost = cyan, warp surge = violet, blocker = red (the palette's damage color, honestly
-        /// earned: it hurts). Trigger logic lives in Core; these are the telegraphs.
+        /// D15.1 gate lane: collectables and obstacles are BRIDGES that wrap the track —
+        /// the ring structure spans the full width, and a translucent energy field inside the
+        /// opening carries the type color. Collectable fields fill the whole opening (faint);
+        /// obstacle fields cover only their dodgeable span (hot, solid). Small gates (Mine/Armor)
+        /// are floating markers. Trigger logic lives in Core; these are the telegraphs.
         /// </summary>
         private void BuildFeatureGates(TrackSample[] s)
         {
             if (track!.gateFeatures == null) return;
             int n = s.Length;
+            float half = track.halfWidth;
+
             foreach (GateFeature f in track.gateFeatures)
             {
                 TrackSample sample = s[Mathf.FloorToInt(Mathf.Repeat(f.fraction, 1f) * n) % n];
-                Vector3 centre = sample.Pos + sample.Nrm * f.lateralOffset;
+                Color tint = GreyboxMaterials.Hex(GateHex(f.type));
+                Quaternion facing = Quaternion.LookRotation(sample.Tan, Vector3.up);
 
-                string hex = f.type switch
+                if (f.IsSmallGate)
                 {
-                    GateFeatureType.WarpSurge => "#9D7BFF",
-                    GateFeatureType.Blocker => "#FF4D6D",
-                    _ => "#37D0FF",
-                };
-                Color tint = GreyboxMaterials.Hex(hex);
+                    // Floating marker at its lane: mine = red orb, armor = cyan prism.
+                    Vector3 pos = sample.Pos + sample.Nrm * f.lateralOffset;
+                    GameObject marker = GameObject.CreatePrimitive(
+                        f.type == GateFeatureType.Mine ? PrimitiveType.Sphere : PrimitiveType.Cube);
+                    marker.name = $"GateFeature_{f.type}";
+                    marker.transform.SetParent(transform, false);
+                    Destroy(marker.GetComponent<Collider>());
+                    marker.transform.localScale = Vector3.one * (f.type == GateFeatureType.Mine ? 2.4f : 2f);
+                    marker.transform.position = new Vector3(pos.x, 2.5f, pos.z);
+                    marker.transform.rotation = facing * Quaternion.Euler(45f, 0f, 45f);
+                    marker.GetComponent<MeshRenderer>().sharedMaterial =
+                        GreyboxMaterials.Lit(tint, 0.4f, 0.2f, tint, 0.9f);
+                    continue;
+                }
 
+                // The bridge: ring structure wrapping the full track width, centred on the road.
                 GameObject ring;
-                float targetWidth = f.halfSpan * 2f;
+                float wrapWidth = half * 2f + 8f;
                 if (featureGatePrefab != null)
                 {
                     ring = ViewPrefabs.InstantiateWithoutColliders(featureGatePrefab, transform);
@@ -138,8 +170,8 @@ namespace Afterburn.View
                     {
                         Bounds b = renderers[0].bounds;
                         for (int i = 1; i < renderers.Length; i++) b.Encapsulate(renderers[i].bounds);
-                        float scale = targetWidth / Mathf.Max(b.size.x, 0.01f);
-                        scale = Mathf.Min(scale, 30f / Mathf.Max(b.size.y, 0.01f));
+                        float scale = wrapWidth / Mathf.Max(b.size.x, 0.01f);
+                        scale = Mathf.Min(scale, 46f / Mathf.Max(b.size.y, 0.01f));
                         ring.transform.localScale = Vector3.one * scale;
                     }
                 }
@@ -147,13 +179,29 @@ namespace Afterburn.View
                 {
                     ring = new GameObject();
                     ring.transform.SetParent(transform, false);
-                    ring.AddComponent<MeshFilter>().sharedMesh = BuildTorus(f.halfSpan, 0.45f, 8, 24);
+                    ring.AddComponent<MeshFilter>().sharedMesh = BuildTorus(half + 3f, 0.6f, 8, 28);
                     ring.AddComponent<MeshRenderer>().sharedMaterial =
-                        GreyboxMaterials.Lit(tint, 0.5f, 0f, tint, f.type == GateFeatureType.Blocker ? 0.9f : 0.6f);
+                        GreyboxMaterials.Lit(tint, 0.5f, 0f, tint, 0.5f);
                 }
                 ring.name = $"GateFeature_{f.type}";
-                ring.transform.position = new Vector3(centre.x, 5f, centre.z);
-                ring.transform.rotation = Quaternion.LookRotation(sample.Tan, Vector3.up);
+                // Centre the opening on the road: ring centre sits at ~40% of the wrap width so
+                // the structure arcs over like a bridge with its lower limbs beside the road.
+                ring.transform.position = new Vector3(sample.Pos.x, wrapWidth * 0.28f, sample.Pos.z);
+                ring.transform.rotation = facing;
+
+                // The energy field: what you actually touch. Full-opening faint for collectables,
+                // partial hot pane for obstacles (dodge by lane).
+                var field = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                field.name = "Field";
+                field.transform.SetParent(transform, false);
+                Destroy(field.GetComponent<Collider>());
+                Vector3 fieldCentre = sample.Pos + sample.Nrm * f.lateralOffset;
+                field.transform.position = new Vector3(fieldCentre.x, 5f, fieldCentre.z);
+                field.transform.rotation = facing;
+                field.transform.localScale = new Vector3(f.halfSpan * 2f, 10f, 1f);
+                float alpha = f.IsObstacle ? 0.38f : 0.12f;
+                field.GetComponent<MeshRenderer>().sharedMaterial =
+                    GreyboxMaterials.LitTransparent(tint, alpha, 0.5f, 0f, tint, f.IsObstacle ? 1.2f : 0.5f);
             }
         }
 
@@ -313,13 +361,13 @@ namespace Afterburn.View
                         gateMaxExtent / Mathf.Max(bounds.size.z, 0.01f));
                     gate.transform.localScale = Vector3.one * scale;
 
-                    // Recentre laterally/longitudinally on the anchor; rest the base at y 0.
+                    // Recentre on the anchor and WRAP the track: the ring's centre floats at
+                    // gateCenterHeight so its lower limbs pass beside/below the road (bridge).
                     Vector3 centre = bounds.center * scale;
-                    float bottom = (bounds.min.y - bounds.center.y) * scale;
                     gate.transform.rotation = Quaternion.LookRotation(s0.Tan, Vector3.up);
                     gate.transform.position = anchor
                         - gate.transform.rotation * new Vector3(centre.x, 0f, centre.z)
-                        + Vector3.up * (-bottom);
+                        + Vector3.up * (gateCenterHeight - centre.y);
                 }
                 else
                 {

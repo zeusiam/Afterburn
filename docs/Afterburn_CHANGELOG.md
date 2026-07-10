@@ -9,6 +9,17 @@
 
 ---
 
+## 2026-07-10 — Session 12 (D15.1 — the gate lane: Wipeout-with-a-twist)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `DESIGN` | **D15.1 (owner direction):** gates become the full collectable/obstacle lane. **Collectables** (bridge rings, full-opening fields): SpeedBoost · WarpSurge · **Barrier** (his "shield" — one-hit absorb charge, also the deflection currency) · **Photon** (tractor surge — deterministic stand-in for "pull the ship ahead close": pulling rail ghosts would break replay determinism) · **Overdrive** (accel buff). **Obstacles** (bridges with PARTIAL hazard fields — dodgeable by lane): Electric (0.3 s input stall) · ReverseWarp (speed dump + backward shove) · **Shredder** (damage + a hull piece visibly tears off + clipped-wing turn debuff 8 s). **Small gates:** Mine (damage+spinout) · Armor (barrier pickup). Obstacles deflected by an armed barrier OR an actively-held (energy-paying) shield — Seni's "deflected by shield count". Barriers also absorb projectiles (no damage, no spinout, NO bounty). All effects speed/status-only or drain-only — §2 untouched, everything deterministic | The fixed-gate twist vs Wipeout: no RNG — gate routes are learnable racing lines |
+| `UNITY` | Enum + params extended; ShipController: BarrierCharges/Stall/Overdrive/TurnDebuff/ReverseShove/OnShredded; CombatSystem barrier absorption + OnHitDeflected; **bridge visuals wrap the track** (rings centred over the road, translucent type-colored energy fields; start gate now wraps too via gateCenterHeight); small-gate markers; ship-part tumble-away on shred; HUD toasts for all types + DEFLECTED; Arena01 v2 lane (10 features) + explicit reseed menu; +3 mechanic tests | "Wrap around the track like a bridge" — the ring IS the road's cross-section |
+
+**⏭ Next:** refocus → `Veratus/Afterburn/Setup/Reseed Arena01 Gates (v2 lane)` → `Build Scenes` → Play.
+
+---
+
 ## 2026-07-10 — Session 11 (D15 gate features + start-gate fixes)
 
 | Type | Change | Rationale |

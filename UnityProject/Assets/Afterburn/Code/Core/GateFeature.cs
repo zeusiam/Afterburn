@@ -13,14 +13,41 @@ namespace Afterburn.Core
     /// </summary>
     public enum GateFeatureType
     {
+        // ---- Collectables (ring gates, full-opening fields) --------------------
         /// <summary>Fly-through speed surge — cap raise + impulse, short.</summary>
         SpeedBoost = 0,
 
         /// <summary>The rare, violent version — "warp speed". Speed only, bigger, longer.</summary>
         WarpSurge = 1,
 
-        /// <summary>A harmful ring parked on the fast line — pass through it and pay energy + speed.</summary>
+        /// <summary>Legacy harmful ring (superseded by the richer obstacles; kept for data compat).</summary>
         Blocker = 2,
+
+        /// <summary>Shield gate: grants a BARRIER charge — absorbs the next obstacle/projectile hit.</summary>
+        Barrier = 3,
+
+        /// <summary>Photon tractor: building acceleration surge — reels you toward the ship ahead.</summary>
+        Photon = 4,
+
+        /// <summary>Overdrive: raw thrust-acceleration buff (distinct feel from cap-raising boost).</summary>
+        Overdrive = 5,
+
+        // ---- Obstacles (partial hazard fields inside the ring opening) ---------
+        /// <summary>Electricity: stalls all input for stallDuration. Deflected by barrier/active shield.</summary>
+        Electric = 6,
+
+        /// <summary>Reverse warp: dumps speed + shoves the ship backwards. Deflected by barrier/shield.</summary>
+        ReverseWarp = 7,
+
+        /// <summary>Shredder: damage + a piece of your ship visibly tears off + clipped-wing handling. Deflectable.</summary>
+        Shredder = 8,
+
+        // ---- Small gates (floating markers, not bridges) -----------------------
+        /// <summary>Mine: damage + spinout. Deflected by barrier/shield.</summary>
+        Mine = 9,
+
+        /// <summary>Armor: small barrier pickup (same as the Shield ring, smaller telegraph).</summary>
+        Armor = 10,
     }
 
     /// <summary>One gate feature on the track (authored in TrackDefinition, baked by TrackSystem).</summary>
@@ -47,11 +74,30 @@ namespace Afterburn.Core
         [Tooltip("SpeedBoost/WarpSurge: surge duration in seconds.")]
         public float surgeDuration = 1.2f;
 
-        [Tooltip("Blocker: energy drained on contact (D14 hazard family — drains only).")]
+        [Tooltip("Obstacles/Mine: energy drained on contact (D14 hazard family — drains only).")]
         public float blockerDamage = 15f;
 
-        [Tooltip("Blocker: ×speed on contact.")]
+        [Tooltip("Obstacles: ×speed on contact (ReverseWarp uses this as the dump, e.g. 0.05).")]
         public float blockerSpeedMult = 0.85f;
+
+        [Tooltip("Barrier/Armor: charges granted (each absorbs one obstacle or projectile hit).")]
+        public int barrierCharges = 1;
+
+        [Tooltip("Electric: input-stall duration in seconds.")]
+        public float stallDuration = 0.3f;
+
+        [Tooltip("Shredder: ×turnRate while clipped.")]
+        public float debuffTurnMult = 0.85f;
+
+        [Tooltip("Shredder: clipped-wing duration in seconds.")]
+        public float debuffDuration = 8f;
+
+        /// <summary>Collectable ring types touch anywhere in the opening; obstacles are partial fields.</summary>
+        public bool IsObstacle => type is GateFeatureType.Blocker or GateFeatureType.Electric
+            or GateFeatureType.ReverseWarp or GateFeatureType.Shredder or GateFeatureType.Mine;
+
+        /// <summary>Small floating markers rather than track-wrapping bridges.</summary>
+        public bool IsSmallGate => type is GateFeatureType.Mine or GateFeatureType.Armor;
     }
 
     /// <summary>
@@ -73,8 +119,8 @@ namespace Afterburn.Core
         private readonly List<Baked> _gates = new();
         private readonly Dictionary<ShipController, bool[]> _inside = new();
 
-        /// <summary>(racer, feature) — fired once per pass. HUD/VFX hook.</summary>
-        public event Action<ShipController, GateFeature>? OnGateTriggered;
+        /// <summary>(racer, feature, deflected) — fired once per pass. HUD/VFX hook.</summary>
+        public event Action<ShipController, GateFeature, bool>? OnGateTriggered;
 
         public GateFeatureSystem(TrackSystem track, TrackDefinition def)
         {
@@ -125,13 +171,22 @@ namespace Afterburn.Core
                 float lateral = Vector3.Dot(racer.Position - s.Pos, s.Nrm);
                 if (Mathf.Abs(lateral - gate.Feature.lateralOffset) > gate.Feature.halfSpan) continue;
 
-                Apply(racer, gate.Feature);
-                OnGateTriggered?.Invoke(racer, gate.Feature);
+                bool deflected = Apply(racer, gate.Feature);
+                OnGateTriggered?.Invoke(racer, gate.Feature, deflected);
             }
         }
 
-        private static void Apply(ShipController racer, GateFeature f)
+        /// <summary>Returns true when an obstacle was DEFLECTED (barrier charge or active shield).</summary>
+        private static bool Apply(ShipController racer, GateFeature f)
         {
+            // Obstacles first check the deflection stack: an armed barrier charge is consumed,
+            // or an actively held (energy-paying) shield deflects for free — Seni's rule.
+            if (f.IsObstacle)
+            {
+                if (racer.Shielding) return true;
+                if (racer.TryConsumeBarrier()) return true;
+            }
+
             switch (f.type)
             {
                 case GateFeatureType.SpeedBoost:
@@ -139,10 +194,46 @@ namespace Afterburn.Core
                     racer.ApplyGateSurge(f.surgeCapMult, f.surgeImpulse, f.surgeDuration);
                     break;
 
+                case GateFeatureType.Photon:
+                    // Tractor lock: acceleration + modest cap raise, building feel via duration.
+                    racer.ApplyOverdrive(1.5f, f.surgeDuration);
+                    racer.ApplyGateSurge(Mathf.Max(1.15f, f.surgeCapMult), 0f, f.surgeDuration);
+                    break;
+
+                case GateFeatureType.Overdrive:
+                    racer.ApplyOverdrive(f.surgeCapMult, f.surgeDuration);
+                    break;
+
+                case GateFeatureType.Barrier:
+                case GateFeatureType.Armor:
+                    racer.ApplyBarrier(f.barrierCharges);
+                    break;
+
                 case GateFeatureType.Blocker:
                     racer.ApplyHazard(f.blockerDamage, f.blockerSpeedMult);
                     break;
+
+                case GateFeatureType.Electric:
+                    racer.ApplyStall(f.stallDuration);
+                    break;
+
+                case GateFeatureType.ReverseWarp:
+                    racer.ApplyHazard(0f, f.blockerSpeedMult);
+                    racer.ApplyReverseShove(f.surgeImpulse);
+                    break;
+
+                case GateFeatureType.Shredder:
+                    racer.ApplyHazard(f.blockerDamage, 0.9f);
+                    racer.ApplyTurnDebuff(f.debuffTurnMult, f.debuffDuration);
+                    racer.RaiseShredded();
+                    break;
+
+                case GateFeatureType.Mine:
+                    racer.ApplyHazard(f.blockerDamage, f.blockerSpeedMult);
+                    racer.ApplySpinout(0.7f);
+                    break;
             }
+            return false;
         }
     }
 }

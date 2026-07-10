@@ -54,6 +54,24 @@ namespace Afterburn.Core
         /// <summary>D15 gate surge: while > 0, the speed cap is at least baseTop × SurgeCapMult.</summary>
         public float SurgeTimer { get; private set; }
         public float SurgeCapMult { get; private set; } = 1f;
+
+        // ---- D15.1 gate-lane states (all speed/status — the energy pool never gains) ----------
+        /// <summary>Barrier charges — each absorbs one obstacle or projectile hit.</summary>
+        public int BarrierCharges { get; private set; }
+
+        /// <summary>Electric stall: while > 0 all inputs read as released.</summary>
+        public float StallTimer { get; private set; }
+
+        /// <summary>Overdrive: thrustAccel × this while OverdriveTimer > 0.</summary>
+        public float OverdriveTimer { get; private set; }
+        public float OverdriveMult { get; private set; } = 1f;
+
+        /// <summary>Shredder clipped-wing: turnRate × this while TurnDebuffTimer > 0.</summary>
+        public float TurnDebuffTimer { get; private set; }
+        public float TurnDebuffMult { get; private set; } = 1f;
+
+        /// <summary>A piece of the ship tore off (Shredder) — View detaches a hull part.</summary>
+        public event Action<ShipController>? OnShredded;
         public int NearestIndex { get; private set; } = -1;
         public int Lane { get; }
         public HullDefinition Hull => _hull;
@@ -85,8 +103,11 @@ namespace Afterburn.Core
         }
 
         /// <summary>Advance one fixed tick. `dt` is a parameter for testability but callers pass <see cref="Tick"/>.</summary>
-        public void Step(in ShipInputState input, float dt)
+        public void Step(in ShipInputState rawInput, float dt)
         {
+            // D15.1 Electric stall: the ship stops listening — every input reads released.
+            ShipInputState input = StallTimer > 0f ? ShipInputState.None : rawInput;
+
             ShipFeel feel = _tuning.shipFeel;
             float baseTop = BaseTopSpeed;
 
@@ -135,7 +156,8 @@ namespace Afterburn.Core
 
             // -- 6. Longitudinal ----------------------------------------------------------------
             float worldScale = feel.worldScale;
-            if (input.Thrust) Speed += feel.thrustAccel * worldScale * dt;
+            float accelMult = OverdriveTimer > 0f ? OverdriveMult : 1f;   // D15.1 Overdrive/Photon
+            if (input.Thrust) Speed += feel.thrustAccel * accelMult * worldScale * dt;
             if (input.Brake) Speed -= feel.brakeDecel * worldScale * dt;
             Speed -= Speed * feel.dragPerSec * dt;
             Speed = Mathf.Clamp(Speed, 0f, cap);
@@ -145,8 +167,9 @@ namespace Afterburn.Core
             if (steer != 0f)
             {
                 float bite = Mathf.Min(1f, Speed / (feel.turnBiteSpeedDivisor * worldScale) + feel.turnBiteFloor);
+                float turnMult = TurnDebuffTimer > 0f ? TurnDebuffMult : 1f;   // D15.1 clipped wing
                 Vector3 up = CurrentFrame().Up;
-                float angleRad = steer * feel.turnRate * dt * bite;
+                float angleRad = steer * feel.turnRate * turnMult * dt * bite;
                 Forward = Quaternion.AngleAxis(angleRad * Mathf.Rad2Deg, up) * Forward;
             }
 
@@ -162,6 +185,17 @@ namespace Afterburn.Core
             {
                 SurgeTimer = Mathf.Max(0f, SurgeTimer - dt);
                 if (SurgeTimer <= 0f) SurgeCapMult = 1f;
+            }
+            if (StallTimer > 0f) StallTimer = Mathf.Max(0f, StallTimer - dt);
+            if (OverdriveTimer > 0f)
+            {
+                OverdriveTimer = Mathf.Max(0f, OverdriveTimer - dt);
+                if (OverdriveTimer <= 0f) OverdriveMult = 1f;
+            }
+            if (TurnDebuffTimer > 0f)
+            {
+                TurnDebuffTimer = Mathf.Max(0f, TurnDebuffTimer - dt);
+                if (TurnDebuffTimer <= 0f) TurnDebuffMult = 1f;
             }
         }
 
@@ -193,6 +227,45 @@ namespace Afterburn.Core
             Energy.Damage(energyDamage);
             Speed *= speedMult;
         }
+
+        // ---- D15.1 gate-lane effects -------------------------------------------
+
+        public void ApplyBarrier(int charges) => BarrierCharges += Mathf.Max(0, charges);
+
+        /// <summary>Consume one barrier charge if armed — obstacles and projectiles call this first.</summary>
+        public bool TryConsumeBarrier()
+        {
+            if (BarrierCharges <= 0) return false;
+            BarrierCharges--;
+            return true;
+        }
+
+        public void ApplyStall(float duration)
+        {
+            if (IntangibleTimer > 0f) return;
+            StallTimer = Mathf.Max(StallTimer, duration);
+        }
+
+        public void ApplyOverdrive(float accelMult, float duration)
+        {
+            OverdriveMult = Mathf.Max(OverdriveMult, accelMult);
+            OverdriveTimer = Mathf.Max(OverdriveTimer, duration);
+        }
+
+        public void ApplyTurnDebuff(float turnMult, float duration)
+        {
+            TurnDebuffMult = Mathf.Min(TurnDebuffMult == 1f ? turnMult : TurnDebuffMult, turnMult);
+            TurnDebuffTimer = Mathf.Max(TurnDebuffTimer, duration);
+        }
+
+        /// <summary>Reverse warp: violent backward shove — the wall clamp re-validates next tick.</summary>
+        public void ApplyReverseShove(float distance)
+        {
+            if (IntangibleTimer > 0f) return;
+            Position -= Forward * distance;
+        }
+
+        public void RaiseShredded() => OnShredded?.Invoke(this);
 
         /// <summary>
         /// Prototype resolveWalls: nearest-centreline lateral clamp + scrape + slide-toward-tangent

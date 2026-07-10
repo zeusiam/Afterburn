@@ -38,6 +38,9 @@ namespace Afterburn.Core
         /// <summary>(shooter, target, rewardPaid, targetWasLeader) — HUD/stats hook (U4/U5).</summary>
         public event Action<IRacer, IRacer, float, bool>? OnHitLanded;
 
+        /// <summary>Target's barrier charge ate the hit (D15.1) — no damage, no spinout, no reward.</summary>
+        public event Action<IRacer>? OnHitDeflected;
+
         public CombatSystem(GameTuning tuning, PilotAbilitySystem abilities, Func<IRacer?>? leaderProvider = null)
         {
             _tuning = tuning != null ? tuning : throw new ArgumentNullException(nameof(tuning));
@@ -113,6 +116,14 @@ namespace Afterburn.Core
         /// <summary>Prototype onHit with ruling #7 applied.</summary>
         public void ResolveHit(IRacer from, IRacer target, bool siphon)
         {
+            // D15.1: an armed barrier charge eats the whole hit — no damage, no spinout,
+            // no bounty (nothing was dealt). Gate-collected armor as anti-weapon currency.
+            if (target is ShipController shielded && shielded.TryConsumeBarrier())
+            {
+                OnHitDeflected?.Invoke(target);
+                return;
+            }
+
             ShipFeel feel = _tuning.shipFeel;
 
             float dmg = feel.projectileDamage;

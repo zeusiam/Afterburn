@@ -62,7 +62,7 @@ namespace Afterburn.Tests
 
             float energyBefore = ship.Energy.Energy;
             bool fired = false;
-            gates.OnGateTriggered += (_, _) => fired = true;
+            gates.OnGateTriggered += (_, _, _) => fired = true;
 
             DriveTo(ship, track, 0.02f, gates);
 
@@ -122,6 +122,83 @@ namespace Afterburn.Tests
         }
 
         [Test]
+        public void Electric_StallsInput_AndBarrierDeflects()
+        {
+            var electric = new GateFeature { type = GateFeatureType.Electric, fraction = 0.02f, halfSpan = 20f, stallDuration = 0.3f };
+            TrackDefinition def = MakeStraightaway(electric);
+
+            // Unprotected pass: stalled — inputs read released, speed decays under drag.
+            var trackA = new TrackSystem(def);
+            var shipA = new ShipController(trackA, MakeHull(), ScriptableObject.CreateInstance<GameTuning>());
+            var gatesA = new GateFeatureSystem(trackA, def);
+            gatesA.Register(shipA);
+            DriveTo(shipA, trackA, 0.02f, gatesA);
+            Assert.That(shipA.StallTimer, Is.GreaterThan(0f), "electric gate must stall");
+            float speedAtStall = shipA.Speed;
+            var thrust = new ShipInputState { Thrust = true };
+            shipA.Step(thrust, Dt);
+            Assert.That(shipA.Speed, Is.LessThan(speedAtStall), "thrust ignored while stalled — drag wins");
+
+            // Barrier pass: deflected, no stall, charge consumed.
+            var trackB = new TrackSystem(def);
+            var shipB = new ShipController(trackB, MakeHull(), ScriptableObject.CreateInstance<GameTuning>());
+            var gatesB = new GateFeatureSystem(trackB, def);
+            gatesB.Register(shipB);
+            shipB.ApplyBarrier(1);
+            bool deflected = false;
+            gatesB.OnGateTriggered += (_, _, d) => deflected = d;
+            DriveTo(shipB, trackB, 0.02f, gatesB);
+            Assert.That(deflected, Is.True, "barrier must deflect the obstacle");
+            Assert.That(shipB.StallTimer, Is.EqualTo(0f));
+            Assert.That(shipB.BarrierCharges, Is.EqualTo(0), "charge consumed");
+        }
+
+        [Test]
+        public void Shredder_DamagesAndClipsTheWing()
+        {
+            var shredder = new GateFeature { type = GateFeatureType.Shredder, fraction = 0.02f, halfSpan = 20f, blockerDamage = 20f, debuffTurnMult = 0.85f, debuffDuration = 8f };
+            TrackDefinition def = MakeStraightaway(shredder);
+            var track = new TrackSystem(def);
+            var ship = new ShipController(track, MakeHull(), ScriptableObject.CreateInstance<GameTuning>());
+            var gates = new GateFeatureSystem(track, def);
+            gates.Register(ship);
+            bool shredded = false;
+            ship.OnShredded += _ => shredded = true;
+
+            DriveTo(ship, track, 0.02f, gates);
+
+            Assert.That(ship.Energy.Energy, Is.EqualTo(80f).Within(1e-3f), "shredder drains 20");
+            Assert.That(ship.TurnDebuffTimer, Is.GreaterThan(0f), "clipped wing active");
+            Assert.That(ship.TurnDebuffMult, Is.EqualTo(0.85f));
+            Assert.That(shredded, Is.True, "the View hook must fire (a part tears off)");
+        }
+
+        [Test]
+        public void Barrier_AbsorbsProjectileHit_NoDamageNoReward()
+        {
+            TrackDefinition def = MakeStraightaway();
+            var track = new TrackSystem(def);
+            var tuning = ScriptableObject.CreateInstance<GameTuning>();
+            var abilities = new PilotAbilitySystem(tuning);
+            var combat = new CombatSystem(tuning, abilities);
+
+            var shooter = new ShipController(track, MakeHull(), tuning);
+            var target = new ShipController(track, MakeHull(), tuning);
+            shooter.Energy.Damage(30f);                          // room to observe any reward
+            target.ApplyBarrier(1);
+
+            bool deflected = false;
+            combat.OnHitDeflected += _ => deflected = true;
+            combat.ResolveHit(shooter, target, siphon: false);
+
+            Assert.That(deflected, Is.True);
+            Assert.That(target.Energy.Energy, Is.EqualTo(100f), "barrier ate the whole hit");
+            Assert.That(target.SpinoutTimer, Is.EqualTo(0f), "no spinout through a barrier");
+            Assert.That(shooter.Energy.Energy, Is.EqualTo(70f), "no bounty for a deflected hit");
+            Assert.That(target.BarrierCharges, Is.EqualTo(0));
+        }
+
+        [Test]
         public void Gate_TriggersOncePerPass_LateralGated()
         {
             var gate = new GateFeature { type = GateFeatureType.SpeedBoost, fraction = 0.02f, halfSpan = 3f, lateralOffset = 200f, surgeCapMult = 1.25f, surgeImpulse = 12f, surgeDuration = 1.2f };
@@ -132,7 +209,7 @@ namespace Afterburn.Tests
             gates.Register(ship);
 
             int triggers = 0;
-            gates.OnGateTriggered += (_, _) => triggers++;
+            gates.OnGateTriggered += (_, _, _) => triggers++;
             DriveTo(ship, track, 0.03f, gates);
 
             Assert.That(triggers, Is.EqualTo(0),

@@ -113,16 +113,37 @@ namespace Afterburn.EditorTools
             Debug.Log($"[Afterburn] Created PilotDefinition '{id}' at {path}.");
         }
 
-        /// <summary>D15 Arena01 gate layout: boosts on straights, the warp surge on the long back
-        /// straight, blockers parked on the fast lines. Speed only / drain only — never energy income.</summary>
+        /// <summary>
+        /// D15.1 Arena01 gate lane (v2 — the Wipeout-with-a-twist mix): collectable BRIDGES span
+        /// the whole track (touch anywhere in the opening); obstacle bridges project PARTIAL
+        /// hazard fields you dodge by lane choice; small gates float at specific lines.
+        /// Speed/status only — the energy pool never gains.
+        /// </summary>
         private static GateFeature[] Arena01GateFeatures() => new[]
         {
-            new GateFeature { type = GateFeatureType.SpeedBoost, fraction = 0.115f, halfSpan = 8f, surgeCapMult = 1.25f, surgeImpulse = 12f, surgeDuration = 1.2f },
-            new GateFeature { type = GateFeatureType.Blocker, fraction = 0.315f, lateralOffset = -4f, halfSpan = 6f, blockerDamage = 15f, blockerSpeedMult = 0.85f },
-            new GateFeature { type = GateFeatureType.SpeedBoost, fraction = 0.44f, halfSpan = 8f, surgeCapMult = 1.25f, surgeImpulse = 12f, surgeDuration = 1.2f },
-            new GateFeature { type = GateFeatureType.Blocker, fraction = 0.55f, lateralOffset = 5f, halfSpan = 6f, blockerDamage = 15f, blockerSpeedMult = 0.85f },
-            new GateFeature { type = GateFeatureType.WarpSurge, fraction = 0.75f, halfSpan = 8f, surgeCapMult = 1.6f, surgeImpulse = 30f, surgeDuration = 2f },
+            new GateFeature { type = GateFeatureType.SpeedBoost, fraction = 0.115f, halfSpan = 17f, surgeCapMult = 1.25f, surgeImpulse = 12f, surgeDuration = 1.2f },
+            new GateFeature { type = GateFeatureType.Armor, fraction = 0.19f, lateralOffset = 6f, halfSpan = 3f, barrierCharges = 1 },
+            new GateFeature { type = GateFeatureType.Electric, fraction = 0.315f, lateralOffset = -8f, halfSpan = 6f, stallDuration = 0.3f },
+            new GateFeature { type = GateFeatureType.Overdrive, fraction = 0.44f, halfSpan = 17f, surgeCapMult = 1.5f, surgeDuration = 2f },
+            new GateFeature { type = GateFeatureType.Mine, fraction = 0.52f, lateralOffset = 5f, halfSpan = 3f, blockerDamage = 20f, blockerSpeedMult = 0.8f },
+            new GateFeature { type = GateFeatureType.Shredder, fraction = 0.575f, lateralOffset = 7f, halfSpan = 6f, blockerDamage = 20f, debuffTurnMult = 0.85f, debuffDuration = 8f },
+            new GateFeature { type = GateFeatureType.Photon, fraction = 0.68f, halfSpan = 17f, surgeCapMult = 1.2f, surgeDuration = 2.5f },
+            new GateFeature { type = GateFeatureType.WarpSurge, fraction = 0.75f, halfSpan = 17f, surgeCapMult = 1.6f, surgeImpulse = 30f, surgeDuration = 2f },
+            new GateFeature { type = GateFeatureType.ReverseWarp, fraction = 0.86f, lateralOffset = -6f, halfSpan = 6f, surgeImpulse = 8f, blockerSpeedMult = 0.05f },
+            new GateFeature { type = GateFeatureType.Barrier, fraction = 0.93f, halfSpan = 17f, barrierCharges = 1 },
         };
+
+        /// <summary>Explicit overwrite for tracks seeded with the v1 five-gate layout.</summary>
+        [MenuItem("Veratus/Afterburn/Setup/Reseed Arena01 Gates (v2 lane)", priority = 31)]
+        public static void ReseedArena01Gates()
+        {
+            var track = AssetDatabase.LoadAssetAtPath<TrackDefinition>($"{TracksDir}/Arena01.asset");
+            if (track == null) { Debug.LogError("[Afterburn] Arena01 missing."); return; }
+            track.gateFeatures = Arena01GateFeatures();
+            EditorUtility.SetDirty(track);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[Afterburn] Arena01 gate lane reseeded — {track.gateFeatures.Length} features (v2).");
+        }
 
         private static void EnsureArena01(ref int created, ref int kept)
         {

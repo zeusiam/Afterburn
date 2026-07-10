@@ -41,6 +41,35 @@ namespace Afterburn.View
         /// <summary>The thruster glow — U2's ShipView will scale/tint it with boost state.</summary>
         public Transform? Thruster => _thruster;
 
+        /// <summary>
+        /// D15.1 Shredder feedback: tear a small piece off the hull — it tumbles away and fades.
+        /// Purely visual (the sim's damage/debuff already applied); parts return on next spawn.
+        /// </summary>
+        public void DetachRandomPart()
+        {
+            Renderer[] parts = GetComponentsInChildren<Renderer>();
+            if (parts.Length <= 1) return;                       // never strip the last piece
+            Renderer victim = parts[Random.Range(1, parts.Length)];
+            Transform t = victim.transform;
+            t.SetParent(null, true);
+            StartCoroutine(TumbleAway(t));
+        }
+
+        private System.Collections.IEnumerator TumbleAway(Transform part)
+        {
+            Vector3 spin = new Vector3(Random.value, Random.value, Random.value) * 540f;
+            Vector3 drift = (Vector3.up * 2f + Random.insideUnitSphere * 4f);
+            float life = 1.5f;
+            for (float e = 0f; e < life && part != null; e += Time.deltaTime)
+            {
+                part.position += drift * Time.deltaTime;
+                part.Rotate(spin * Time.deltaTime);
+                part.localScale *= 1f - 0.9f * (Time.deltaTime / life);
+                yield return null;
+            }
+            if (part != null) Destroy(part.gameObject);
+        }
+
         private void Awake()
         {
             Color tint = _tintOverride ?? (hull != null ? hull.tintColor : GreyboxMaterials.Hex("#9D7BFF"));

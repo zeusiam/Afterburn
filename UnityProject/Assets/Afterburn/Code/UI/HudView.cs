@@ -66,15 +66,28 @@ namespace Afterburn.UI
             };
             race.Contacts.OnShipContact += (_, _, dmg) => Toast($"CONTACT −{dmg:0}", AfterburnPalette.Red);
             race.Track.OnWallBroken += _ => Toast("WALL SMASHED", AfterburnPalette.Orange);
-            race.Gates.OnGateTriggered += (who, feature) =>
+            race.Gates.OnGateTriggered += (who, feature, deflected) =>
             {
                 if (!ReferenceEquals(who, race.Player)) return;
+                if (deflected) { Toast("DEFLECTED", AfterburnPalette.Cyan); return; }
                 switch (feature.type)
                 {
                     case GateFeatureType.SpeedBoost: Toast("BOOST GATE", AfterburnPalette.Cyan); break;
                     case GateFeatureType.WarpSurge: Toast("WARP SURGE", AfterburnPalette.Violet); break;
+                    case GateFeatureType.Photon: Toast("PHOTON LOCK", AfterburnPalette.Teal); break;
+                    case GateFeatureType.Overdrive: Toast("OVERDRIVE", AfterburnPalette.Gold); break;
+                    case GateFeatureType.Barrier:
+                    case GateFeatureType.Armor: Toast("BARRIER +1", AfterburnPalette.Cyan); break;
+                    case GateFeatureType.Electric: Toast("STALLED", AfterburnPalette.Gold); break;
+                    case GateFeatureType.ReverseWarp: Toast("REVERSE WARP", AfterburnPalette.Orange); break;
+                    case GateFeatureType.Shredder: Toast($"SHREDDED −{feature.blockerDamage:0}", AfterburnPalette.Red); break;
+                    case GateFeatureType.Mine: Toast($"MINE −{feature.blockerDamage:0}", AfterburnPalette.Red); break;
                     case GateFeatureType.Blocker: Toast($"BLOCKER −{feature.blockerDamage:0}", AfterburnPalette.Red); break;
                 }
+            };
+            race.Combat.OnHitDeflected += who =>
+            {
+                if (ReferenceEquals(who, race.Player)) Toast("DEFLECTED", AfterburnPalette.Cyan);
             };
             race.Abilities.OnAbilityActivated += (who, type) =>
             {

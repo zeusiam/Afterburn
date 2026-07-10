@@ -104,6 +104,13 @@ namespace Afterburn.View
             combatViewGo.transform.SetParent(transform, false);
             combatViewGo.AddComponent<CombatView>().Bind(_race.Combat, _race.Abilities);
 
+            // D15.1 Shredder: a piece of the player's ship visibly tears off.
+            ShipGreybox? playerGreybox = shipTransform.GetComponent<ShipGreybox>();
+            if (playerGreybox != null)
+            {
+                _race.Player.OnShredded += _ => playerGreybox.DetachRandomPart();
+            }
+
             if (trackView != null)
             {
                 _race.Track.OnWallBroken += _ => trackView.HideHeavySlab();
