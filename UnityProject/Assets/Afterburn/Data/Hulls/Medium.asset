@@ -22,4 +22,5 @@ MonoBehaviour:
   tintColor: {r: 0.6156863, g: 0.48235294, b: 1, a: 1}
   tag: Balanced
   description: No gate access, no weakness. The honest default.
-  shipPrefab: {fileID: 1804642995804468694, guid: 8b76e784a0aed8245b1f78c3f71461ba, type: 3}
+  shipPrefab: {fileID: 2932255946319442920, guid: 1c8f67540e4036f40be5976780d786c0, type: 3}
+  shipVisualScale: 1.4

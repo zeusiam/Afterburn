@@ -24,6 +24,24 @@ namespace Afterburn.View
         [Tooltip("World width the gate's bounds are scaled to span (track is 34 u wide + clearance).")]
         [SerializeField] private float gateSpanWidth = 46f;
 
+        [Tooltip("Max world height/depth after fitting — station-scale gate assemblies get clamped " +
+                 "instead of towering over the arena.")]
+        [SerializeField] private float gateMaxExtent = 55f;
+
+        [Tooltip("Gate parked this far AHEAD of the start line along the tangent, so the grid " +
+                 "spawns outside it and flies through on launch (0 = centred on the line).")]
+        [SerializeField] private float gateForwardOffset = 22f;
+
+        [Tooltip("D15 gate-feature ring visual (small warp gate) — auto-fitted per feature. " +
+                 "Null = procedural rings.")]
+        [SerializeField] private GameObject? featureGatePrefab;
+
+        [Tooltip("Scenic gates orbiting the arena at distance (pure dressing). Empty = none.")]
+        [SerializeField] private GameObject[] scenicGatePrefabs = System.Array.Empty<GameObject>();
+
+        public GameObject? FeatureGatePrefab { get => featureGatePrefab; set => featureGatePrefab = value; }
+        public GameObject[] ScenicGatePrefabs { get => scenicGatePrefabs; set => scenicGatePrefabs = value; }
+
         private TrackSample[]? _samples;
         private GameObject? _heavySlab;
 
@@ -84,6 +102,83 @@ namespace Afterburn.View
             BuildGroundGrid();
             BuildStartGate(s, half);
             BuildShortcutMarkers(s, half);
+            BuildFeatureGates(s);
+            BuildScenicRing();
+        }
+
+        /// <summary>
+        /// D15 gate features: a ring per feature at its track fraction, color-coded by type —
+        /// boost = cyan, warp surge = violet, blocker = red (the palette's damage color, honestly
+        /// earned: it hurts). Trigger logic lives in Core; these are the telegraphs.
+        /// </summary>
+        private void BuildFeatureGates(TrackSample[] s)
+        {
+            if (track!.gateFeatures == null) return;
+            int n = s.Length;
+            foreach (GateFeature f in track.gateFeatures)
+            {
+                TrackSample sample = s[Mathf.FloorToInt(Mathf.Repeat(f.fraction, 1f) * n) % n];
+                Vector3 centre = sample.Pos + sample.Nrm * f.lateralOffset;
+
+                string hex = f.type switch
+                {
+                    GateFeatureType.WarpSurge => "#9D7BFF",
+                    GateFeatureType.Blocker => "#FF4D6D",
+                    _ => "#37D0FF",
+                };
+                Color tint = GreyboxMaterials.Hex(hex);
+
+                GameObject ring;
+                float targetWidth = f.halfSpan * 2f;
+                if (featureGatePrefab != null)
+                {
+                    ring = Instantiate(featureGatePrefab, transform);
+                    foreach (Collider collider in ring.GetComponentsInChildren<Collider>()) Destroy(collider);
+                    Renderer[] renderers = ring.GetComponentsInChildren<Renderer>();
+                    if (renderers.Length > 0)
+                    {
+                        Bounds b = renderers[0].bounds;
+                        for (int i = 1; i < renderers.Length; i++) b.Encapsulate(renderers[i].bounds);
+                        float scale = targetWidth / Mathf.Max(b.size.x, 0.01f);
+                        scale = Mathf.Min(scale, 30f / Mathf.Max(b.size.y, 0.01f));
+                        ring.transform.localScale = Vector3.one * scale;
+                    }
+                }
+                else
+                {
+                    ring = new GameObject();
+                    ring.transform.SetParent(transform, false);
+                    ring.AddComponent<MeshFilter>().sharedMesh = BuildTorus(f.halfSpan, 0.45f, 8, 24);
+                    ring.AddComponent<MeshRenderer>().sharedMaterial =
+                        GreyboxMaterials.Lit(tint, 0.5f, 0f, tint, f.type == GateFeatureType.Blocker ? 0.9f : 0.6f);
+                }
+                ring.name = $"GateFeature_{f.type}";
+                ring.transform.position = new Vector3(centre.x, 5f, centre.z);
+                ring.transform.rotation = Quaternion.LookRotation(sample.Tan, Vector3.up);
+            }
+        }
+
+        /// <summary>D15 "surround the stage": station-scale gates orbiting the arena — pure backdrop.</summary>
+        private void BuildScenicRing()
+        {
+            if (scenicGatePrefabs == null || scenicGatePrefabs.Length == 0) return;
+            const int count = 5;
+            const float radius = 620f;
+            for (int i = 0; i < count; i++)
+            {
+                GameObject prefab = scenicGatePrefabs[i % scenicGatePrefabs.Length];
+                if (prefab == null) continue;
+                float a = i / (float)count * Mathf.PI * 2f + 0.4f;
+                Vector3 pos = new Vector3(Mathf.Cos(a) * radius, 25f + (i % 3) * 30f, Mathf.Sin(a) * radius);
+
+                GameObject gate = Instantiate(prefab, transform);
+                gate.name = $"ScenicGate{i}";
+                foreach (Collider collider in gate.GetComponentsInChildren<Collider>()) Destroy(collider);
+                gate.transform.position = pos;
+                gate.transform.rotation = Quaternion.LookRotation((-pos).normalized, Vector3.up)
+                                          * Quaternion.Euler(0f, (i * 47f) % 90f - 45f, 0f);
+                gate.transform.localScale = Vector3.one * 3f;   // distant + fog: silhouettes, not detail
+            }
         }
 
         private void AddMesh(string childName, Mesh mesh, Material mat)
@@ -210,26 +305,31 @@ namespace Afterburn.View
                 }
 
                 Renderer[] renderers = gate.GetComponentsInChildren<Renderer>();
+                Vector3 anchor = new Vector3(s0.Pos.x, 0f, s0.Pos.z) + s0.Tan * gateForwardOffset;
                 if (renderers.Length > 0)
                 {
                     Bounds bounds = renderers[0].bounds;
                     for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
-                    float width = Mathf.Max(bounds.size.x, 0.01f);
-                    float scale = gateSpanWidth / width;
+
+                    // Fit to span the track — but clamp against station-scale assemblies whose
+                    // bounds dwarf their ring opening (they'd otherwise swallow the whole grid).
+                    float scale = gateSpanWidth / Mathf.Max(bounds.size.x, 0.01f);
+                    scale = Mathf.Min(scale,
+                        gateMaxExtent / Mathf.Max(bounds.size.y, 0.01f),
+                        gateMaxExtent / Mathf.Max(bounds.size.z, 0.01f));
                     gate.transform.localScale = Vector3.one * scale;
 
-                    // Recentre laterally/longitudinally on the start line; rest the base at y 0.
+                    // Recentre laterally/longitudinally on the anchor; rest the base at y 0.
                     Vector3 centre = bounds.center * scale;
                     float bottom = (bounds.min.y - bounds.center.y) * scale;
                     gate.transform.rotation = Quaternion.LookRotation(s0.Tan, Vector3.up);
-                    gate.transform.position = new Vector3(s0.Pos.x, 0f, s0.Pos.z)
+                    gate.transform.position = anchor
                         - gate.transform.rotation * new Vector3(centre.x, 0f, centre.z)
                         + Vector3.up * (-bottom);
                 }
                 else
                 {
-                    gate.transform.SetPositionAndRotation(
-                        new Vector3(s0.Pos.x, 0f, s0.Pos.z),
+                    gate.transform.SetPositionAndRotation(anchor,
                         Quaternion.LookRotation(s0.Tan, Vector3.up));
                 }
                 return;

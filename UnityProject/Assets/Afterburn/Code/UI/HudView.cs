@@ -66,6 +66,16 @@ namespace Afterburn.UI
             };
             race.Contacts.OnShipContact += (_, _, dmg) => Toast($"CONTACT −{dmg:0}", AfterburnPalette.Red);
             race.Track.OnWallBroken += _ => Toast("WALL SMASHED", AfterburnPalette.Orange);
+            race.Gates.OnGateTriggered += (who, feature) =>
+            {
+                if (!ReferenceEquals(who, race.Player)) return;
+                switch (feature.type)
+                {
+                    case GateFeatureType.SpeedBoost: Toast("BOOST GATE", AfterburnPalette.Cyan); break;
+                    case GateFeatureType.WarpSurge: Toast("WARP SURGE", AfterburnPalette.Violet); break;
+                    case GateFeatureType.Blocker: Toast($"BLOCKER −{feature.blockerDamage:0}", AfterburnPalette.Red); break;
+                }
+            };
             race.Abilities.OnAbilityActivated += (who, type) =>
             {
                 if (!ReferenceEquals(who, race.Player)) return;

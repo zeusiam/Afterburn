@@ -61,10 +61,12 @@ namespace Afterburn.Core
             Abilities = new PilotAbilitySystem(config.Tuning);
             Combat = new CombatSystem(config.Tuning, Abilities, () => BountyLeader);
             Contacts = new ShipContactSystem(config.Tuning);
+            Gates = new GateFeatureSystem(Track, config.Track);   // D15 track features
 
             Player = new ShipController(Track, config.PlayerHull, config.Tuning, lane: 0);
             Abilities.Register(Player, config.PlayerPilot);
             Combat.Attach(Player);
+            Gates.Register(Player);
             _racers.Add(Player);
 
             var rng = new System.Random(config.Seed);
@@ -100,6 +102,7 @@ namespace Afterburn.Core
         public PilotAbilitySystem Abilities { get; }
         public CombatSystem Combat { get; }
         public ShipContactSystem Contacts { get; }
+        public GateFeatureSystem Gates { get; }
         public ShipController Player { get; }
         public IReadOnlyList<IRacer> Racers => _racers;
         public IReadOnlyList<GhostRacer> Ghosts => _ghosts;
@@ -140,6 +143,7 @@ namespace Afterburn.Core
                     RaceTime += dt;
 
                     Player.Step(input, dt);
+                    Gates.Tick(Player);                          // D15: gate features fire post-step
                     if (Player.Boosting) _stats.BoostTime += dt;
                     if (input.AbilityEdge) Abilities.Activate(Player, _racers);
 

@@ -44,6 +44,9 @@ namespace Afterburn.Core
 
         [Header("Spec-gated shortcuts (BUILD §7.5)")]
         public ShortcutZone[] shortcuts = Array.Empty<ShortcutZone>();
+
+        [Header("Gate features (D15 — deterministic track features: speed gates, warp surges, blockers)")]
+        public GateFeature[] gateFeatures = Array.Empty<GateFeature>();
     }
 
     /// <summary>

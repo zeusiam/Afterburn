@@ -123,6 +123,27 @@ namespace Afterburn.EditorTools
                 trackView.StartGatePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
                     AssetDatabase.GUIDToAssetPath(gateGuids[0]));
             }
+
+            // D15: feature-gate ring + the scenic surround (varied gate silhouettes at distance).
+            string[] featureGuids = AssetDatabase.FindAssets("WrapGates_Example_06 t:GameObject",
+                new[] { "Assets/WarpGates/Prefabs" });
+            if (featureGuids.Length > 0)
+            {
+                trackView.FeatureGatePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                    AssetDatabase.GUIDToAssetPath(featureGuids[0]));
+            }
+            var scenic = new System.Collections.Generic.List<GameObject>();
+            foreach (string exampleName in new[] { "WrapGates_Example_10", "WrapGates_Example_18", "WrapGates_Example_26" })
+            {
+                string[] guids = AssetDatabase.FindAssets($"{exampleName} t:GameObject",
+                    new[] { "Assets/WarpGates/Prefabs" });
+                if (guids.Length > 0)
+                {
+                    var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    if (prefab != null) scenic.Add(prefab);
+                }
+            }
+            trackView.ScenicGatePrefabs = scenic.ToArray();
             EditorUtility.SetDirty(trackView);
 
             // Starfield backdrop (PortSpec §10, built on Awake).

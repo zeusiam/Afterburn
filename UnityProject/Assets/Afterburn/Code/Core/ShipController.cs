@@ -50,6 +50,10 @@ namespace Afterburn.Core
         public bool FiredThisTick { get; private set; }
         public float SpinoutTimer { get; private set; }
         public float IntangibleTimer { get; private set; }
+
+        /// <summary>D15 gate surge: while > 0, the speed cap is at least baseTop × SurgeCapMult.</summary>
+        public float SurgeTimer { get; private set; }
+        public float SurgeCapMult { get; private set; } = 1f;
         public int NearestIndex { get; private set; } = -1;
         public int Lane { get; }
         public HullDefinition Hull => _hull;
@@ -124,6 +128,9 @@ namespace Afterburn.Core
             float cap = baseTop;
             if (Boosting) cap = baseTop * _tuning.boostSpeedMult;
             else if (Shielding) cap = baseTop * _tuning.shieldSpeedCap;
+            // D15 gate surge: guarantees AT LEAST the surged cap — max, never stacking (speed
+            // only; the energy economy never sees it). Spinout still bites afterwards.
+            if (SurgeTimer > 0f) cap = Mathf.Max(cap, baseTop * SurgeCapMult);
             if (SpinoutTimer > 0f) cap *= feel.spinoutSpeedCapMult;
 
             // -- 6. Longitudinal ----------------------------------------------------------------
@@ -151,6 +158,11 @@ namespace Afterburn.Core
             // -- 9. Timers ----------------------------------------------------------------------
             if (SpinoutTimer > 0f) SpinoutTimer = Mathf.Max(0f, SpinoutTimer - dt);
             if (IntangibleTimer > 0f) IntangibleTimer = Mathf.Max(0f, IntangibleTimer - dt);
+            if (SurgeTimer > 0f)
+            {
+                SurgeTimer = Mathf.Max(0f, SurgeTimer - dt);
+                if (SurgeTimer <= 0f) SurgeCapMult = 1f;
+            }
         }
 
         /// <summary>Combat entry points (U3): spinout on hit; Sora's phase.</summary>
@@ -162,6 +174,23 @@ namespace Afterburn.Core
         public void ApplyContactPush(Vector3 pushedPosition, float speedMult)
         {
             Position = pushedPosition;
+            Speed *= speedMult;
+        }
+
+        /// <summary>D15 gate surge — SPEED ONLY: cap raise (max, never stacked) + clamped impulse.</summary>
+        public void ApplyGateSurge(float capMult, float impulse, float duration)
+        {
+            SurgeCapMult = Mathf.Max(SurgeCapMult, capMult);
+            SurgeTimer = Mathf.Max(SurgeTimer, duration);
+            float surgedCap = BaseTopSpeed * SurgeCapMult;
+            Speed = Mathf.Min(Speed + impulse, surgedCap);
+        }
+
+        /// <summary>D15 blocker — D14 hazard family: drains energy + scrapes speed. Phase passes through.</summary>
+        public void ApplyHazard(float energyDamage, float speedMult)
+        {
+            if (IntangibleTimer > 0f) return;
+            Energy.Damage(energyDamage);
             Speed *= speedMult;
         }
 

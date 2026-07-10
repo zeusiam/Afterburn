@@ -9,6 +9,18 @@
 
 ---
 
+## 2026-07-10 — Session 11 (D15 gate features + start-gate fixes)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `DESIGN` | **D15 locked:** gates as deterministic TRACK FEATURES — SpeedBoost/WarpSurge (speed-only: cap-max + clamped impulse) and Blockers (drain-only, Phase-immune). Ranked-legal (shortcut category, not pickups); no teleport; recorded ghosts stay deterministic; synthetic ghosts exempt v1 | Owner's "gates as in-game items" reconciled with §2 + the pickup ban |
+| `UNITY` | `GateFeature`+`GateFeatureSystem` (Core), `ShipController` surge/hazard, director wiring, Arena01 seeded 5 gates (field-migration), color-coded ring visuals (cyan/violet/red) via warp-gate prefab, **scenic ring** — 5 station gates orbiting the arena, HUD toasts, 4 gate tests | "Surround the stage" + gameplay gates in one pass |
+| `FIX` | Start gate: extent clamp (station-scale assemblies no longer tower), parked 22 u ahead (grid spawns clear, flies through on launch); steer-zone tint idles near-invisible, brightens on touch | Seni's three playtest reports, all root-caused |
+
+**⏭ Next:** refocus → `Create or Update SOs` (migrates Arena01 gates) → `Build Scenes` → Play. Tests on next editor close.
+
+---
+
 ## 2026-07-10 — Session 10 (the Ebal fleet + generated asset pack)
 
 | Type | Change | Rationale |

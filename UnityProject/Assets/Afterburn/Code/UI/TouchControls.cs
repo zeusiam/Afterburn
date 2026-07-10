@@ -34,6 +34,7 @@ namespace Afterburn.UI
         private int _steerTouchId = -1;
         private int _wheelTouchId = -1;
         private bool _abilityEdge;
+        private Image? _steerTint;
 
         public ShipInputState Current { get; private set; }
 
@@ -68,11 +69,12 @@ namespace Afterburn.UI
             tapImg.raycastTarget = true;
             abilityTap.gameObject.AddComponent<Button>().onClick.AddListener(TriggerAbility);
 
-            // Steer zone hint (left).
+            // Steer zone hint (left) — near-invisible at rest, brightens only while a steer
+            // touch is live (the tint was reading as a persistent blue overlay).
             RectTransform steerHint = UIFactory.Panel(_root, "SteerZone",
                 Vector2.zero, new Vector2(SteerZoneFraction, 1f), Vector2.zero, Vector2.zero);
-            Image hint = UIFactory.Rect(steerHint, "Tint", AfterburnPalette.WithAlpha(AfterburnPalette.Cyan, 0.03f));
-            hint.raycastTarget = false;
+            _steerTint = UIFactory.Rect(steerHint, "Tint", AfterburnPalette.WithAlpha(AfterburnPalette.Cyan, 0.008f));
+            _steerTint.raycastTarget = false;
             UIFactory.Label(
                 UIFactory.Fixed(steerHint, "Hint", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
                     new Vector2(0f, 40f), new Vector2(700f, 50f)),
@@ -148,6 +150,12 @@ namespace Afterburn.UI
             }
 
             if (!steerActive) _steerTouchId = -1;
+
+            // Steer tint feedback: whisper at rest, visible while a steer touch is live.
+            if (_steerTint != null)
+            {
+                _steerTint.color = AfterburnPalette.WithAlpha(AfterburnPalette.Cyan, steerActive ? 0.05f : 0.008f);
+            }
             if (!wheelActive) _wheelTouchId = -1;
 
             // Steer: hold = thrust; drag past the dead zone = steer.

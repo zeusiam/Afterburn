@@ -113,11 +113,34 @@ namespace Afterburn.EditorTools
             Debug.Log($"[Afterburn] Created PilotDefinition '{id}' at {path}.");
         }
 
+        /// <summary>D15 Arena01 gate layout: boosts on straights, the warp surge on the long back
+        /// straight, blockers parked on the fast lines. Speed only / drain only — never energy income.</summary>
+        private static GateFeature[] Arena01GateFeatures() => new[]
+        {
+            new GateFeature { type = GateFeatureType.SpeedBoost, fraction = 0.115f, halfSpan = 8f, surgeCapMult = 1.25f, surgeImpulse = 12f, surgeDuration = 1.2f },
+            new GateFeature { type = GateFeatureType.Blocker, fraction = 0.315f, lateralOffset = -4f, halfSpan = 6f, blockerDamage = 15f, blockerSpeedMult = 0.85f },
+            new GateFeature { type = GateFeatureType.SpeedBoost, fraction = 0.44f, halfSpan = 8f, surgeCapMult = 1.25f, surgeImpulse = 12f, surgeDuration = 1.2f },
+            new GateFeature { type = GateFeatureType.Blocker, fraction = 0.55f, lateralOffset = 5f, halfSpan = 6f, blockerDamage = 15f, blockerSpeedMult = 0.85f },
+            new GateFeature { type = GateFeatureType.WarpSurge, fraction = 0.75f, halfSpan = 8f, surgeCapMult = 1.6f, surgeImpulse = 30f, surgeDuration = 2f },
+        };
+
         private static void EnsureArena01(ref int created, ref int kept)
         {
             string path = $"{TracksDir}/Arena01.asset";
             var existing = AssetDatabase.LoadAssetAtPath<TrackDefinition>(path);
-            if (existing != null) { kept++; return; }
+            if (existing != null)
+            {
+                // Field-level migration (documented exception to never-overwrite): populating a
+                // NEW empty field is not clobbering hand-edits. Hand-edited layouts are preserved.
+                if (existing.gateFeatures == null || existing.gateFeatures.Length == 0)
+                {
+                    existing.gateFeatures = Arena01GateFeatures();
+                    EditorUtility.SetDirty(existing);
+                    Debug.Log("[Afterburn] Arena01 migrated: D15 gate features seeded (5 gates).");
+                }
+                kept++;
+                return;
+            }
 
             var track = ScriptableObject.CreateInstance<TrackDefinition>();
             track.displayName = "Arena 01";
@@ -129,6 +152,7 @@ namespace Afterburn.EditorTools
             track.halfWidth = 17f;
             track.wallHeight = 3.2f;
             track.checkpointFractions = System.Array.Empty<float>();   // prototype defines none (PortSpec div #2)
+            track.gateFeatures = Arena01GateFeatures();                // D15
             track.shortcuts = new[]
             {
                 new ShortcutZone { access = GateAccess.LightGap, fromFraction = 0.20f, toFraction = 0.24f, extraInnerAllowance = 20f, side = 1 },
