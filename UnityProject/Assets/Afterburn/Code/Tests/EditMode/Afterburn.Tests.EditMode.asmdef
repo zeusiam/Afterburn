@@ -2,7 +2,8 @@
     "name": "Afterburn.Tests.EditMode",
     "rootNamespace": "Afterburn.Tests",
     "references": [
-        "Afterburn.Core"
+        "Afterburn.Core",
+        "Afterburn.UI"
     ],
     "includePlatforms": [
         "Editor"

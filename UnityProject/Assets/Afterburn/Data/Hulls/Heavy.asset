@@ -22,3 +22,4 @@ MonoBehaviour:
   tintColor: {r: 1, g: 0.5411765, b: 0.23529412, a: 1}
   tag: Smashes walls
   description: Slow but a huge pool. Rams through the Heavy Wall shortcut.
+  shipPrefab: {fileID: 5540946659929306471, guid: 2e86f5b271d8e6b4397cd316292f31cd, type: 3}

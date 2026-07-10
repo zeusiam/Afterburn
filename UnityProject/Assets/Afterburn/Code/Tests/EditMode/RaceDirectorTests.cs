@@ -78,6 +78,10 @@ namespace Afterburn.Tests
         public void Countdown_FreezesEverything_ThenGoesRacing()
         {
             RaceDirector race = MakeRace();
+            Assert.That(race.State, Is.EqualTo(RaceState.Grid), "races start in the Grid hold (U5 lineup)");
+            race.Tick(new ShipInputState { Thrust = true }, Dt);
+            Assert.That(race.State, Is.EqualTo(RaceState.Grid), "Grid holds until BeginCountdown");
+            race.BeginCountdown();
             Assert.That(race.State, Is.EqualTo(RaceState.Countdown));
 
             Vector3 playerStart = race.Player.Position;
@@ -211,6 +215,10 @@ namespace Afterburn.Tests
         {
             RaceDirector race = MakeRace();
             SkipCountdown(race);
+            // D14: the passing grid rams an idle player (mass-scaled contact damage) — coast
+            // 3 s so the ghosts clear and regen tops the pool back up before measuring cadence.
+            for (int i = 0; i < 60 * 3; i++) race.Tick(ShipInputState.None, Dt);
+
             var fire = new ShipInputState { Fire = true };
             for (int i = 0; i < 60; i++) race.Tick(fire, Dt);
             Assert.That(race.Stats.Shots, Is.EqualTo(4), "4 shots in 1 s at the 0.28 cadence");
@@ -218,6 +226,7 @@ namespace Afterburn.Tests
 
         private static void SkipCountdown(RaceDirector race)
         {
+            race.BeginCountdown();
             int ticks = Mathf.CeilToInt(RaceDirector.CountdownDuration / Dt) + 1;
             for (int i = 0; i < ticks; i++) race.Tick(ShipInputState.None, Dt);
         }

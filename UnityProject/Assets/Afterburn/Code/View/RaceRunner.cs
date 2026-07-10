@@ -51,6 +51,9 @@ namespace Afterburn.View
         /// <summary>The live race — U5's HUD reads everything from here.</summary>
         public RaceDirector? Race => _race;
 
+        /// <summary>Touch input pushed in by the UI layer each frame; ORed with keyboard.</summary>
+        public ShipInputState ExternalInput { get; set; }
+
         private void Awake()
         {
             if (track == null || tuning == null || playerHull == null || playerPilot == null
@@ -61,19 +64,26 @@ namespace Afterburn.View
                 return;
             }
 
+            // Loadout from the MainMenu (falls back to scene defaults for the dev flow).
+            HullDefinition chosenHull = RaceLoadout.Hull != null ? RaceLoadout.Hull : playerHull;
+            PilotDefinition chosenPilot = RaceLoadout.Pilot != null ? RaceLoadout.Pilot : playerPilot;
+
+            // Seed: rematch replays the same grid; otherwise roll fresh and remember it.
+            if (!RaceContext.UseFixedSeed) RaceContext.Seed = System.Environment.TickCount;
+
             _race = new RaceDirector(new RaceDirector.Config
             {
                 Track = track,
                 Tuning = tuning,
-                PlayerHull = playerHull,
-                PlayerPilot = playerPilot,
+                PlayerHull = chosenHull,
+                PlayerPilot = chosenPilot,
                 GhostGrid = new[]
                 {
                     (heavyHull, -1, 0.006f),   // prototype roster: heavy+Kade lane −1
                     (lightHull, 1, 0.012f),    // light+Sora lane +1
                     (mediumHull, 2, 0.018f),   // medium+Nyx lane +2
                 },
-                Seed = System.Environment.TickCount,
+                Seed = RaceContext.Seed,
             });
 
             // Player transform is the scene ship; ghosts get greybox ships with roster tints.
@@ -85,7 +95,7 @@ namespace Afterburn.View
                 var greybox = ghostGo.AddComponent<ShipGreybox>();
                 greybox.Hull = _race.Ghosts[g].Hull;
                 greybox.TintOverride = GreyboxMaterials.Hex(GhostTints[g]);
-                greybox.HologramMode = true;               // ghosts READ intangible (UIEnvSpec §3.1)
+                // D14: ships are tangible — solid rendering (LitTransparent stays for Sora's Phase).
                 ghostGo.SetActive(true);
                 _transforms[g + 1] = ghostGo.transform;
             }
@@ -112,7 +122,7 @@ namespace Afterburn.View
         {
             if (_race == null) return;
 
-            ShipInputState input = ReadKeyboard();
+            ShipInputState input = Merge(ReadKeyboard(), ExternalInput);
 
             _accumulator += Time.deltaTime;
             _accumulator = Mathf.Min(_accumulator, 0.25f);   // dt clamp, prototype-style
@@ -150,6 +160,18 @@ namespace Afterburn.View
             }
         }
 
+        private static ShipInputState Merge(ShipInputState a, ShipInputState b) => new ShipInputState
+        {
+            Thrust = a.Thrust || b.Thrust,
+            Brake = a.Brake || b.Brake,
+            Left = a.Left || b.Left,
+            Right = a.Right || b.Right,
+            Boost = a.Boost || b.Boost,
+            Fire = a.Fire || b.Fire,
+            Shield = a.Shield || b.Shield,
+            AbilityEdge = a.AbilityEdge || b.AbilityEdge,
+        };
+
         private static ShipInputState ReadKeyboard()
         {
             Keyboard? kb = Keyboard.current;
@@ -167,36 +189,6 @@ namespace Afterburn.View
             };
         }
 
-        /// <summary>Dev overlay only — the real HUD is U5. Deleted the day HUD.prefab lands.</summary>
-        private void OnGUI()
-        {
-            if (_race == null) return;
-            GUILayout.BeginArea(new Rect(12, 12, 460, 200));
-            GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 22 };
-
-            switch (_race.State)
-            {
-                case RaceState.Countdown:
-                    GUILayout.Label($"COUNTDOWN  {Mathf.CeilToInt(_race.CountdownRemaining)}", style);
-                    break;
-                case RaceState.Racing:
-                case RaceState.Finished:
-                    ShipController p = _race.Player;
-                    string mode = p.Boosting ? "BOOST" : p.Shielding ? "SHIELD" : "COAST";
-                    GUILayout.Label(
-                        $"E {p.Energy.Energy:F0}/{p.Energy.Max:F0}  [{mode}]   " +
-                        $"v {p.Speed * 3f:F0} km/h   P{_race.PlayerPlace()}/4   " +
-                        $"Lap {Mathf.Min(_race.Player != null ? (int)_race.PlayerProgress + 1 : 1, 3)}/3   " +
-                        $"t {_race.RaceTime:F1}s", style);
-                    if (_race.State == RaceState.Finished)
-                    {
-                        GUILayout.Label($"FINISHED — P{_race.PlayerPlace()}  {_race.PlayerFinishTime:F1}s  " +
-                                        $"shots {_race.Stats.Shots} hits {_race.Stats.Hits} " +
-                                        $"bounty {_race.Stats.BountyHits} boost {_race.Stats.BoostTime:F1}s", style);
-                    }
-                    break;
-            }
-            GUILayout.EndArea();
-        }
+        // The U5 HUD (Afterburn.UI.HudView) replaced the old OnGUI dev overlay.
     }
 }

@@ -73,6 +73,10 @@ namespace Afterburn.Tests
             hull.maxEnergy = 100f; hull.regenPerSec = 8f; hull.topSpeedMult = 1f;
             hull.collisionRadius = 2f; hull.gateAccess = GateAccess.None;
             var tuning = ScriptableObject.CreateInstance<GameTuning>();
+            // D14 fields are post-prototype rulings — zeroed here so the trace measures the
+            // prototype-parity loop (divergence-by-ruling, documented in DesignReview D14).
+            tuning.shipFeel.wallContactDamagePerSec = 0f;
+            tuning.shipFeel.shipContactDamage = 0f;
 
             var shipTrack = new TrackSystem(def);
             var ship = new ShipController(shipTrack, hull, tuning);

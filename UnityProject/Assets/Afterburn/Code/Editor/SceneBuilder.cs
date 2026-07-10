@@ -49,7 +49,7 @@ namespace Afterburn.EditorTools
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateMenuCamera("Main Camera");
-            new GameObject("BootRoot");   // U5 wires the studio splash + MainMenu load here
+            new GameObject("Boot").AddComponent<Afterburn.UI.BootScreen>();
             EditorSceneManager.SaveScene(scene, BootPath);
         }
 
@@ -57,7 +57,22 @@ namespace Afterburn.EditorTools
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateMenuCamera("Main Camera");
-            new GameObject("MenuRoot");   // U5 wires the loadout screen here
+
+            var menu = new GameObject("MainMenu").AddComponent<Afterburn.UI.MainMenuScreen>();
+            menu.Hulls = new[]
+            {
+                AssetDatabase.LoadAssetAtPath<HullDefinition>(AfterburnMenu.HullsDir + "/Light.asset"),
+                AssetDatabase.LoadAssetAtPath<HullDefinition>(AfterburnMenu.HullsDir + "/Medium.asset"),
+                AssetDatabase.LoadAssetAtPath<HullDefinition>(AfterburnMenu.HullsDir + "/Heavy.asset"),
+            };
+            menu.Pilots = new[]
+            {
+                AssetDatabase.LoadAssetAtPath<PilotDefinition>(AfterburnMenu.PilotsDir + "/Vex.asset"),
+                AssetDatabase.LoadAssetAtPath<PilotDefinition>(AfterburnMenu.PilotsDir + "/Sora.asset"),
+                AssetDatabase.LoadAssetAtPath<PilotDefinition>(AfterburnMenu.PilotsDir + "/Kade.asset"),
+                AssetDatabase.LoadAssetAtPath<PilotDefinition>(AfterburnMenu.PilotsDir + "/Nyx.asset"),
+            };
+            EditorUtility.SetDirty(menu);
             EditorSceneManager.SaveScene(scene, MainMenuPath);
         }
 
@@ -152,6 +167,13 @@ namespace Afterburn.EditorTools
             Vector3 look = shipGo.transform.position + fwd * 10f;
             look.y = 2f;
             camGo.transform.LookAt(look);
+
+            // U5: race flow (lineup → countdown → racing → podium → summary) + HUD + touch.
+            var flowGo = new GameObject("RaceFlow");
+            var flow = flowGo.AddComponent<Afterburn.UI.RaceFlowController>();
+            flow.Runner = runner;
+            flow.RaceCamera = cam;
+            EditorUtility.SetDirty(flow);
 
             EditorSceneManager.SaveScene(scene, RacePath);
         }

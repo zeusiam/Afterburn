@@ -98,6 +98,19 @@ namespace Afterburn.Core
         [Tooltip("Slide-along-wall heading nudge toward tangent on contact.")]
         public float wallSlideHeadingNudge = 0.18f;
 
+        [Header("Contact damage (D14, 2026-07-09 — post-prototype ruling: ships are tangible)")]
+        [Tooltip("Energy/s drained while grinding a wall (D14). 0 = prototype-parity behaviour.")]
+        public float wallContactDamagePerSec = 6f;
+
+        [Tooltip("Base energy damage on ship-ship contact, scaled by mass ratio (other/own) per side.")]
+        public float shipContactDamage = 10f;
+
+        [Tooltip("s — per-pair contact cooldown so overlap doesn't drain per-tick.")]
+        public float shipContactCooldown = 0.5f;
+
+        [Tooltip("×speed applied to the player on ship contact (same feel family as the wall scrape).")]
+        public float shipContactSpeedMult = 0.92f;
+
         [Tooltip("s — min gap between shots. Held fire auto-repeats at this cadence.")]
         public float fireTapCooldown = 0.28f;
 

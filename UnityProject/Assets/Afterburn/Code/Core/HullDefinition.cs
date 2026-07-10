@@ -39,5 +39,14 @@ namespace Afterburn.Core
         [TextArea]
         [Tooltip("Loadout-card sidegrade copy shown in the hull picker (BUILD §8).")]
         public string description = string.Empty;
+
+        [Tooltip("D13 hybrid: optional PBR ship prefab (StarSparrow/Hi-Rez). Null = greybox cone. " +
+                 "The View auto-fits it to sim scale (~5 u long, +z forward).")]
+        public GameObject? shipPrefab;
+
+        [Tooltip("Visual presence multiplier for the prefab path (sim length 5 u × this). " +
+                 "Purely cosmetic — collision radius and camera framing use the sim, not the mesh. " +
+                 "Sleek hulls read small at 1.0; ~1.4 restores the greybox cone's screen presence.")]
+        public float shipVisualScale = 1.4f;
     }
 }

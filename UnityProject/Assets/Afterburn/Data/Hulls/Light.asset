@@ -22,3 +22,4 @@ MonoBehaviour:
   tintColor: {r: 0.21568628, g: 0.8156863, b: 1, a: 1}
   tag: Fits narrow gaps
   description: Fast, fragile, thirsty pool. Squeezes through the Light Gap shortcut.
+  shipPrefab: {fileID: 8310193472532158436, guid: dcdbafa8386db084794d27ea12244cf3, type: 3}

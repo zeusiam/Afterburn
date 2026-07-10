@@ -5,12 +5,14 @@ using UnityEngine;
 namespace Afterburn.Core
 {
     /// <summary>Race lifecycle states (BUILD §7.8). The prototype had no countdown — its addition
-    /// is a design upgrade (DesignReview ruling #1); the parity trace-diff window starts at green.</summary>
+    /// is a design upgrade (DesignReview ruling #1); the parity trace-diff window starts at green.
+    /// Grid = pre-countdown hold for the U5 lineup sweep (the mandatory cosmetic billboard).</summary>
     public enum RaceState
     {
-        Countdown = 0,
-        Racing = 1,
-        Finished = 2,
+        Grid = 0,
+        Countdown = 1,
+        Racing = 2,
+        Finished = 3,
     }
 
     /// <summary>Per-race player stats (PortSpec §9).</summary>
@@ -58,6 +60,7 @@ namespace Afterburn.Core
 
             Abilities = new PilotAbilitySystem(config.Tuning);
             Combat = new CombatSystem(config.Tuning, Abilities, () => BountyLeader);
+            Contacts = new ShipContactSystem(config.Tuning);
 
             Player = new ShipController(Track, config.PlayerHull, config.Tuning, lane: 0);
             Abilities.Register(Player, config.PlayerPilot);
@@ -81,15 +84,22 @@ namespace Afterburn.Core
                 if (wasLeader) _stats.BountyHits++;
             };
 
-            State = RaceState.Countdown;
+            State = RaceState.Grid;
             CountdownRemaining = CountdownDuration;
             BountyLeader = Player;                             // prototype: player seeds the reduce
+        }
+
+        /// <summary>Called by the flow when the lineup sweep ends (or immediately in dev/tests).</summary>
+        public void BeginCountdown()
+        {
+            if (State == RaceState.Grid) State = RaceState.Countdown;
         }
 
         // ---- Read surface (View/HUD/tests) ------------------------------------
         public TrackSystem Track { get; }
         public PilotAbilitySystem Abilities { get; }
         public CombatSystem Combat { get; }
+        public ShipContactSystem Contacts { get; }
         public ShipController Player { get; }
         public IReadOnlyList<IRacer> Racers => _racers;
         public IReadOnlyList<GhostRacer> Ghosts => _ghosts;
@@ -106,11 +116,18 @@ namespace Afterburn.Core
         public bool PlayerFinished { get; private set; }
         public float PlayerFinishTime { get; private set; }
 
+        /// <summary>Completed lap times (U5 summary delta / future medals). Forward crossings only.</summary>
+        public List<float> PlayerLapTimes { get; } = new();
+        private float _lapMark;
+
         /// <summary>Advance one fixed tick. Player input is ignored outside Racing.</summary>
         public void Tick(ShipInputState input, float dt)
         {
             switch (State)
             {
+                case RaceState.Grid:
+                    return;
+
                 case RaceState.Countdown:
                     CountdownRemaining -= dt;
                     if (CountdownRemaining <= 0f) State = RaceState.Racing;
@@ -136,6 +153,7 @@ namespace Afterburn.Core
                     }
 
                     Abilities.Tick(dt);
+                    Contacts.Tick(dt, Player, _ghosts);           // D14: tangible ships
                     Combat.Tick(dt, _racers, finishedFlags);
 
                     UpdatePlayerProgress();
@@ -152,7 +170,12 @@ namespace Afterburn.Core
             int i = Track.Nearest(Player.Position, Player.NearestIndex);
             float frac = i / (float)Track.SampleCount;
             float d = frac - PlayerFrac;
-            if (d < -0.5f) PlayerLaps++;
+            if (d < -0.5f)
+            {
+                PlayerLaps++;
+                PlayerLapTimes.Add(RaceTime - _lapMark);
+                _lapMark = RaceTime;
+            }
             else if (d > 0.5f) PlayerLaps--;
             PlayerFrac = frac;
 

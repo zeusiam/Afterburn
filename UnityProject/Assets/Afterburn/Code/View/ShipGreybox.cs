@@ -44,9 +44,47 @@ namespace Afterburn.View
         private void Awake()
         {
             Color tint = _tintOverride ?? (hull != null ? hull.tintColor : GreyboxMaterials.Hex("#9D7BFF"));
-            BuildBody(tint);
-            BuildWing();
-            BuildThruster();
+            if (hull != null && hull.shipPrefab != null)
+            {
+                BuildFromPrefab(hull.shipPrefab);
+            }
+            else
+            {
+                BuildBody(tint);
+                BuildWing();
+                BuildThruster();
+            }
+        }
+
+        /// <summary>
+        /// D13 hybrid path: instantiate the PBR ship and auto-fit it to sim scale — the sim's
+        /// collision radius and camera framing assume a ~5 u ship with +z forward (prototype).
+        /// </summary>
+        private void BuildFromPrefab(GameObject prefab)
+        {
+            GameObject visual = Instantiate(prefab, transform);
+            visual.name = "HullVisual";
+
+            foreach (Collider collider in visual.GetComponentsInChildren<Collider>())
+            {
+                Destroy(collider);                          // collision is the analytic clamp, never physics
+            }
+
+            // Auto-fit: uniform scale so the forward (z) length ≈ 5 u, recentred on the sim origin.
+            Renderer[] renderers = visual.GetComponentsInChildren<Renderer>();
+            if (renderers.Length > 0)
+            {
+                Bounds bounds = renderers[0].bounds;
+                for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+
+                float length = Mathf.Max(bounds.size.z, 0.01f);
+                float presence = hull != null ? Mathf.Max(hull.shipVisualScale, 0.1f) : 1f;
+                float scale = 5f * presence / length;
+                visual.transform.localScale = Vector3.one * scale;
+                Vector3 worldCentre = bounds.center;
+                Vector3 localCentre = transform.InverseTransformPoint(worldCentre) * scale;
+                visual.transform.localPosition = -localCentre;
+            }
         }
 
         /// <summary>

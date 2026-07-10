@@ -145,7 +145,7 @@ namespace Afterburn.Core
 
             // -- 8. Integrate + walls -----------------------------------------------------------
             Vector3 np = Position + Forward * (Speed * dt);
-            ResolveWalls(ref np);
+            ResolveWalls(ref np, dt);
             Position = np;
 
             // -- 9. Timers ----------------------------------------------------------------------
@@ -157,12 +157,20 @@ namespace Afterburn.Core
         public void ApplySpinout(float duration) => SpinoutTimer = Mathf.Max(SpinoutTimer, duration);
         public void ApplyIntangible(float duration) => IntangibleTimer = Mathf.Max(IntangibleTimer, duration);
 
+        /// <summary>D14 ship-contact response: pushed out of the overlap + speed scraped.
+        /// The wall clamp re-validates the pushed position on the next tick.</summary>
+        public void ApplyContactPush(Vector3 pushedPosition, float speedMult)
+        {
+            Position = pushedPosition;
+            Speed *= speedMult;
+        }
+
         /// <summary>
         /// Prototype resolveWalls: nearest-centreline lateral clamp + scrape + slide-toward-tangent
         /// + hard positional snap onto the sample's cross-section. Sora's phase skips entirely
         /// (the window keeps advancing so re-attachment stays on-layer — D6 note).
         /// </summary>
-        private void ResolveWalls(ref Vector3 np)
+        private void ResolveWalls(ref Vector3 np, float dt)
         {
             if (IntangibleTimer > 0f)
             {
@@ -195,6 +203,8 @@ namespace Afterburn.Core
             {
                 ShipFeel feel = _tuning.shipFeel;
                 Speed *= feel.wallScrapeSpeedMult;
+                // D14: grinding a wall drains the pool — clean driving feeds the economy.
+                if (feel.wallContactDamagePerSec > 0f) Energy.Damage(feel.wallContactDamagePerSec * dt);
 
                 float tanH = Mathf.Atan2(s.Tan.x, s.Tan.z);
                 float h = Heading;

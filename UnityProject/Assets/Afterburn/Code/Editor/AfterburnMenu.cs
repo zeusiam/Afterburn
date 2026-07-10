@@ -139,6 +139,36 @@ namespace Afterburn.EditorTools
             Debug.Log($"[Afterburn] Created TrackDefinition 'Arena01' at {path}.");
         }
 
+        /// <summary>
+        /// D13 gate 0: wire three distinct StarSparrow example ships onto the hull assets
+        /// (only where empty — idempotent, never overwrites a hand-picked prefab).
+        /// </summary>
+        [MenuItem("Veratus/Afterburn/Setup/Assign StarSparrow Hull Visuals", priority = 30)]
+        public static void AssignStarSparrowVisuals()
+        {
+            (string hull, string prefab)[] picks =
+            {
+                ("Light", "Assets/StarSparrow/Prefabs/Examples/StarSparrow2.prefab"),
+                ("Medium", "Assets/StarSparrow/Prefabs/Examples/StarSparrow15.prefab"),
+                ("Heavy", "Assets/StarSparrow/Prefabs/Examples/StarSparrow28.prefab"),
+            };
+            int assigned = 0;
+            foreach ((string hullName, string prefabPath) in picks)
+            {
+                var hull = AssetDatabase.LoadAssetAtPath<HullDefinition>($"{HullsDir}/{hullName}.asset");
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+                if (hull == null) { Debug.LogError($"[Afterburn] Hull '{hullName}' missing — run Create or Update SOs."); continue; }
+                if (prefab == null) { Debug.LogError($"[Afterburn] Prefab not found: {prefabPath}"); continue; }
+                if (hull.shipPrefab != null) continue;      // hand-picked — keep
+                hull.shipPrefab = prefab;
+                EditorUtility.SetDirty(hull);
+                assigned++;
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[Afterburn] StarSparrow visuals assigned to {assigned} hull(s). " +
+                      "Clear a hull's Ship Prefab field to return it to greybox.");
+        }
+
         /// <summary>Creates the asset with its default field values only if missing (studio contract).</summary>
         public static T EnsureSO<T>(string path, ref int created, ref int kept) where T : ScriptableObject
         {

@@ -9,6 +9,32 @@
 
 ---
 
+## 2026-07-10 — Session 9 (U5 front-end + HUD + touch · StarSparrow gate 0)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `UNITY` | **U5 built:** SIGNAL VOID token system (`AfterburnPalette/Type/Motion`) · `UIFactory` runtime component library (canvas 2796×1290, SafeArea roots, robust font-fallback chain) · **Race HUD** (frame-true hero energy bar ∝ maxEnergy, no-tween law + loss-ghost trail, mode colors, ticks per 20, state chips, P/lap/tabular timer, km/h ×3, BOUNTY tag, trailer-only Intel bar, baked-outline minimap + leader ring, toasts 1.1 s, countdown) · **touch layout** (steer zone + energy-action wheel with input-layer exclusion PROVEN by exhaustive-sweep test, slide-to-switch, ability button) · **flow** (Grid hold → lineup sweep → countdown → racing → podium orbit → Summary with the three hooks + Rematch-same-seed) · Boot/MainMenu-loadout/Settings screens · lap-time capture | UIEnvSpec §4 executed; the game is playable end-to-end: Boot → loadout → race → summary → one more run |
+| `UNITY` | **D13 gate 0 running:** Ebal **StarSparrow** (free kit) imported and validated — ShaderGraph materials = URP-native (zero conversion), shared 2048² texture set ≈ 8 MB for ALL ships, single-renderer prefabs = 1 draw call/ship. `HullDefinition.shipPrefab` + auto-fit (5 u sim length, +z) + `shipVisualScale` presence knob (default 1.4); assign menu `Veratus/Afterburn/Setup/Assign StarSparrow Hull Visuals` (idempotent) | Renders perfectly in-game. **Key finding: the Colorize shader (shared textures + per-material color params) IS the livery architecture the economy spec designed.** Hi-Rez €87 purchase decision awaits Seni |
+| `FIX` | Wheel touch-classification now reads the wheel's ACTUAL screen rect (SafeArea notch inset had desynced touch from visuals — boost worked by luck, fire/shield fell in dead sectors) · TMP labels construct inactive with an explicit font (kills warning spam; dynamic-font last resort) · `Stats_CountShots` updated for D14 (the passing grid rams an idle player — the test now lets the grid clear) | Playtest findings from Seni's sessions, all root-caused |
+| `SWEEP` | **69/69 edit-mode tests, zero compile errors** (headless, editor closed) | Full-stack verification: U2 parity + U3 combat + U4 ghosts/replay + U5 wheel/director |
+
+**⏭ Next:** Seni's calls — Hi-Rez buy/pass (gate 0 look test) · contact-damage tuning verdict (6/s wall, 10 base ship) · then U6 (Salvage/IAP scaffolding + Game Center counters) or the U3-art pass (TrackRibbon shader, SDF gates) per preference.
+
+---
+
+## 2026-07-09 — Session 8 (U2 feel sign-off + D14 tangible ships)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `DESIGN` | **U2 FEEL GATE PASSED — Seni: "feels like a match"** (side-by-side vs the HTML at frozen tuning) | The kill-gate re-validation the whole port aimed at |
+| `DESIGN` | **D14 locked (owner ruling):** ships are TANGIBLE — wall grind drains 6 energy/s (atop the ×0.92 scrape); ship↔ship contact = mutual **mass-ratio** damage (base 10), player pushout + scrape, 0.5 s pair cooldown, Phase immune. `hull.mass` gains its first gameplay consumer. Ghost holograms reverted to solid (tangible things look solid); `LitTransparent` reserved for Sora's Phase | Overrides the intangible-ghost recommendation after the feel pass; §2-safe (contact only drains). Parity trace zeroes the D14 fields — divergence-by-ruling |
+| `UNITY` | `ShipContactSystem` (Core) + wall-damage in `ShipController.ResolveWalls` + 6 contact tests; new GameTuning block (`wallContactDamagePerSec`, `shipContactDamage`, `shipContactCooldown`, `shipContactSpeedMult`) | All tunable; zero = prototype-parity mode |
+| `SCOPE` | Balance watch flagged: mass is now a live sidegrade axis (±10% accounting); rail-locked ghosts never wall-grind — skill band compensation review at the U4 re-tune | Keep the sidegrade doctrine honest |
+
+**⏭ Next:** Seni closes Unity or runs the in-editor test suite (project lock blocks batchmode); then **U5: HUD + loadout + lineup/podium + touch** per UIEnvSpec.
+
+---
+
 ## 2026-07-09 — Session 7 (headless build: U2 → U4 game logic)
 
 | Type | Change | Rationale |
