@@ -1,0 +1,57 @@
+{
+  "id": "r13",
+  "name": "Ghost Armada",
+  "mode": "race",
+  "biomeFamily": "Derelict Fleet",
+  "difficulty": 2,
+  "hazards": [
+    "Dead hulls"
+  ],
+  "laps": 3,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#080B14",
+    "fog": "#080B14",
+    "ground": "#12161F",
+    "accent": "#5EE3FF",
+    "accentAlt": "#8893BC",
+    "starfield": "#9FB4D0"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#080B14",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "closed-loop-spline",
+    "halfWidth": 17,
+    "minCornerRadius": 58,
+    "shortcuts": [
+      "LightGap",
+      "HeavyWall"
+    ]
+  },
+  "props": [
+    "ship-wreck",
+    "panel-light",
+    "debris-net"
+  ],
+  "audioBed": "gameplay"
+}

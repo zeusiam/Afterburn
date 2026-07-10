@@ -1,0 +1,10 @@
+{
+  "id": "rhea",
+  "name": "Rhea",
+  "role": "Warden",
+  "type": "pilot",
+  "ability": "Bulwark",
+  "cooldown": "19s",
+  "note": "Upgrades reduce cooldown ONLY — never damage or speed.",
+  "bio": "Shares a shield bubble on coast. The comeback anchor."
+}

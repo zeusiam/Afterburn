@@ -1,0 +1,57 @@
+{
+  "id": "r05",
+  "name": "Shattered Ring",
+  "mode": "race",
+  "biomeFamily": "Asteroid Belt",
+  "difficulty": 2,
+  "hazards": [
+    "Tumbling rock"
+  ],
+  "laps": 3,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#0B0A12",
+    "fog": "#0B0A12",
+    "ground": "#241C14",
+    "accent": "#FF8A3C",
+    "accentAlt": "#C9A06A",
+    "starfield": "#D9C3A0"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0B0A12",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "closed-loop-spline",
+    "halfWidth": 17,
+    "minCornerRadius": 58,
+    "shortcuts": [
+      "LightGap",
+      "HeavyWall"
+    ]
+  },
+  "props": [
+    "asteroid-rock",
+    "ore-vein",
+    "tumbler"
+  ],
+  "audioBed": "gameplay"
+}

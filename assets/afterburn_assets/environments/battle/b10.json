@@ -1,0 +1,54 @@
+{
+  "id": "b10",
+  "name": "Hangar Zero",
+  "mode": "battle",
+  "biomeFamily": "Derelict Hangar",
+  "difficulty": 3,
+  "hazards": [
+    "Blast doors"
+  ],
+  "laps": null,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#080B14",
+    "fog": "#090C16",
+    "ground": "#13161F",
+    "accent": "#9D7BFF",
+    "accentAlt": "#5EE3FF",
+    "starfield": "#9FB4D0"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#090C16",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "arena",
+    "shape": "disc",
+    "coverProps": true
+  },
+  "props": [
+    "girder",
+    "blast-door",
+    "coolant-fog",
+    "pillar"
+  ],
+  "audioBed": "gameplay_hyper"
+}

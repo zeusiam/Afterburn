@@ -1,0 +1,76 @@
+{
+  "palette": [
+    {
+      "n": "Night Base",
+      "hex": "#0A0E1F",
+      "u": "scene background",
+      "t": "unlit"
+    },
+    {
+      "n": "Track Road",
+      "hex": "#12203C",
+      "u": "race ribbon",
+      "t": "standard"
+    },
+    {
+      "n": "Track Wall",
+      "hex": "#2B4D8F",
+      "u": "barriers · emissive",
+      "t": "emissive"
+    },
+    {
+      "n": "Hull Light",
+      "hex": "#37D0FF",
+      "u": "interceptor tint",
+      "t": "emissive"
+    },
+    {
+      "n": "Hull Medium",
+      "hex": "#9D7BFF",
+      "u": "balanced tint",
+      "t": "emissive"
+    },
+    {
+      "n": "Hull Heavy",
+      "hex": "#FF8A3C",
+      "u": "juggernaut tint",
+      "t": "emissive"
+    },
+    {
+      "n": "Laurel Gold",
+      "hex": "#F5C754",
+      "u": "bounty · earned",
+      "t": "emissive"
+    },
+    {
+      "n": "Neon Cyan",
+      "hex": "#5EE3FF",
+      "u": "live · boost",
+      "t": "emissive"
+    },
+    {
+      "n": "Plasma",
+      "hex": "#FF3D8B",
+      "u": "projectile · promo",
+      "t": "emissive"
+    },
+    {
+      "n": "Shortcut Gap",
+      "hex": "#37D0FF",
+      "u": "light gate pillars",
+      "t": "emissive"
+    },
+    {
+      "n": "Breakwall",
+      "hex": "#FF8A3C",
+      "u": "heavy slab",
+      "t": "emissive"
+    },
+    {
+      "n": "Danger",
+      "hex": "#FF4757",
+      "u": "hazard · hit",
+      "t": "emissive"
+    }
+  ]
+}

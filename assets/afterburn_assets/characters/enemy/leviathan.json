@@ -1,0 +1,9 @@
+{
+  "id": "leviathan",
+  "name": "Leviathan",
+  "role": "Boss",
+  "type": "enemy",
+  "threat": "Extreme",
+  "mode": "battle",
+  "bio": "Arena boss. Multi-phase, area denial, the final wall."
+}

@@ -1,0 +1,9 @@
+{
+  "id": "reaver",
+  "name": "Reaver",
+  "role": "Elite",
+  "type": "enemy",
+  "threat": "High",
+  "mode": "battle",
+  "bio": "Shielded raider that hunts the bounty leader."
+}

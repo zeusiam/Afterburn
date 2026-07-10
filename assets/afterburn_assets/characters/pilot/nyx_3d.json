@@ -1,0 +1,25 @@
+{
+  "id": "nyx",
+  "name": "Nyx",
+  "role": "Trickster",
+  "type": "pilot",
+  "ability": "Decoy",
+  "cooldown": "22s",
+  "note": "Upgrades reduce cooldown ONLY — never damage or speed.",
+  "bio": "Spawns a ghost that draws fire for 3s. Vanish in plain sight.",
+  "kind": "holographic-emblem",
+  "tint": "#ff3d8b",
+  "geometry": "SVG emblem extruded (fills->beveled solids, strokes->tubes) + hex backplate + projector base",
+  "extrudeDepth": 1.2,
+  "bevel": 0.45,
+  "material": {
+    "shader": "URP/Lit + Emission",
+    "emissive": true
+  },
+  "animation": {
+    "bob": "0.7u sine",
+    "ringSpin": true
+  },
+  "use": "Profile screen / select ring / podium holo-badge",
+  "source": "characters/pilot/nyx.svg"
+}

@@ -1,0 +1,54 @@
+{
+  "id": "b03",
+  "name": "The Colosseum",
+  "mode": "battle",
+  "biomeFamily": "Orbital Station",
+  "difficulty": 3,
+  "hazards": [
+    "Crowd tier"
+  ],
+  "laps": null,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#0A0E1F",
+    "fog": "#0A0E1F",
+    "ground": "#181F42",
+    "accent": "#5EE3FF",
+    "accentAlt": "#F5C754",
+    "starfield": "#9FB4D0"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0A0E1F",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "arena",
+    "shape": "disc",
+    "coverProps": true
+  },
+  "props": [
+    "platform-ring",
+    "turret",
+    "panel-light",
+    "pillar"
+  ],
+  "audioBed": "gameplay_hyper"
+}

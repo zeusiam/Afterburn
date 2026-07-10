@@ -1,0 +1,57 @@
+{
+  "id": "r01",
+  "name": "Crimson Veil",
+  "mode": "race",
+  "biomeFamily": "Nebula Reach",
+  "difficulty": 1,
+  "hazards": [
+    "Ion squalls"
+  ],
+  "laps": 3,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#0A0E1F",
+    "fog": "#0A0E1F",
+    "ground": "#14203C",
+    "accent": "#FF3D8B",
+    "accentAlt": "#5EE3FF",
+    "starfield": "#B58CFF"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0A0E1F",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "closed-loop-spline",
+    "halfWidth": 17,
+    "minCornerRadius": 58,
+    "shortcuts": [
+      "LightGap",
+      "HeavyWall"
+    ]
+  },
+  "props": [
+    "gas-cloud",
+    "dust-lane",
+    "ion-arc"
+  ],
+  "audioBed": "gameplay"
+}

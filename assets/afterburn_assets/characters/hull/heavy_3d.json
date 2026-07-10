@@ -1,0 +1,27 @@
+{
+  "id": "heavy",
+  "name": "Heavy",
+  "role": "Juggernaut",
+  "type": "hull",
+  "stats": {
+    "Energy": 130,
+    "Regen": 5,
+    "Speed": "0.88×"
+  },
+  "tint": "#ff8a3c",
+  "bio": "Slow, huge pool. Smashes the Heavy-Wall shortcut.",
+  "kind": "holographic-emblem",
+  "geometry": "SVG emblem extruded (fills->beveled solids, strokes->tubes) + hex backplate + projector base",
+  "extrudeDepth": 1.2,
+  "bevel": 0.45,
+  "material": {
+    "shader": "URP/Lit + Emission",
+    "emissive": true
+  },
+  "animation": {
+    "bob": "0.7u sine",
+    "ringSpin": true
+  },
+  "use": "Profile screen / select ring / podium holo-badge",
+  "source": "characters/hull/heavy.svg"
+}

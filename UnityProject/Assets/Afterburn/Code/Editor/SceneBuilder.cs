@@ -114,6 +114,15 @@ namespace Afterburn.EditorTools
             var trackGo = new GameObject("Track");
             var trackView = trackGo.AddComponent<TrackView>();
             trackView.Track = arena;
+
+            // Warp gate on the start line when the Ebal pack is present (falls back to the ring).
+            string[] gateGuids = AssetDatabase.FindAssets("WrapGates_Example_02 t:GameObject",
+                new[] { "Assets/WarpGates/Prefabs" });
+            if (gateGuids.Length > 0)
+            {
+                trackView.StartGatePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
+                    AssetDatabase.GUIDToAssetPath(gateGuids[0]));
+            }
             EditorUtility.SetDirty(trackView);
 
             // Starfield backdrop (PortSpec §10, built on Awake).

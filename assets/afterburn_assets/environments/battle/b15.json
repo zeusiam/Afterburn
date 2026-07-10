@@ -1,0 +1,53 @@
+{
+  "id": "b15",
+  "name": "Plasma Well",
+  "mode": "battle",
+  "biomeFamily": "Nebula Pocket",
+  "difficulty": 5,
+  "hazards": [
+    "Overload"
+  ],
+  "laps": null,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#0A0E20",
+    "fog": "#0A0E20",
+    "ground": "#14203C",
+    "accent": "#FF3D8B",
+    "accentAlt": "#5EE3FF",
+    "starfield": "#B58CFF"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0A0E20",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "arena",
+    "shape": "disc",
+    "coverProps": true
+  },
+  "props": [
+    "gas-cloud",
+    "ion-arc",
+    "vortex"
+  ],
+  "audioBed": "gameplay_hyper"
+}

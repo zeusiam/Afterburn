@@ -9,6 +9,20 @@
 
 ---
 
+## 2026-07-10 — Session 10 (the Ebal fleet + generated asset pack)
+
+| Type | Change | Rationale |
+|---|---|---|
+| `ASSETS` | **D13 RESOLVED — fleet purchased + imported:** Ultimate Spaceships Creator (931 MB, supersedes Hi-Rez), Modular Weapons & Turrets (320 MB), Modular Warp Gates (294 MB). All Ebal, all URP-native Colorize ShaderGraphs | One publisher = one visual language; Colorize = the livery architecture |
+| `UNITY` | **USC hulls wired:** menu `Assign USC Hull Visuals` — Light=CosmicShark / Medium=StriderOx / Heavy=VoidWhale (family-searched, any variant swappable in Inspector). **Warp gate start line:** `TrackView.startGatePrefab` + auto-fit span (46 u), SceneBuilder wires `WrapGates_Example_02`; procedural ring stays the fallback | The start line becomes a set-piece; hull classes get named identities |
+| `REPO` | **Vendor packs gitignored** + StarSparrow untracked (kept on disk): USC ships a 108 MB file — GitHub rejects >100 MB. Fresh clones reimport via Package Manager → My Assets (GUIDs stable). Manual backup zips still include everything | Repo stays lean; references survive reimport |
+| `ASSETS` | **Generated pack assessed** (`assets/afterburn_assets/`, 30 MB): 43 icons (SVG+PNG — WP-08 half-solved), 33 WAV cues (most of the audio track), 45 env manifests (post-launch arena pipeline for WP-12), pilot emblems. Caveats: palette drift on 2 values vs SIGNAL VOID tokens; "drachma"→Salvage rename; hazards/enemy concepts need §2 screening | Icons + audio integrate next; manifests feed ThemeDefinition later |
+| `SCOPE` | Neon Drift track kit REJECTED (assessed): the road IS the sim (spline = collision/ghosts/laps/parity) — mesh circuits can't host it; 3.3 GB PC-grade; WP-01's ribbon shader delivers the same look natively | The one asset category that must stay procedural |
+
+**⏭ Next:** Seni refocuses editor → `Veratus/Afterburn/Setup/Assign USC Hull Visuals` + `Build Scenes` → Play (USC ships + warp-gate start line). Then: icons+audio wiring, or WP-01 TrackRibbon shader session.
+
+---
+
 ## 2026-07-10 — Session 9 (U5 front-end + HUD + touch · StarSparrow gate 0)
 
 | Type | Change | Rationale |

@@ -17,8 +17,17 @@ namespace Afterburn.View
 
         [SerializeField] private TrackDefinition? track;
 
+        [Tooltip("Optional warp-gate prefab for the start/finish line (Ebal Modular Warp Gates). " +
+                 "Null = procedural SDF-style ring. Auto-fitted to span the track width.")]
+        [SerializeField] private GameObject? startGatePrefab;
+
+        [Tooltip("World width the gate's bounds are scaled to span (track is 34 u wide + clearance).")]
+        [SerializeField] private float gateSpanWidth = 46f;
+
         private TrackSample[]? _samples;
         private GameObject? _heavySlab;
+
+        public GameObject? StartGatePrefab { get => startGatePrefab; set => startGatePrefab = value; }
 
         public TrackDefinition? Track
         {
@@ -188,6 +197,44 @@ namespace Afterburn.View
         private void BuildStartGate(TrackSample[] s, float half)
         {
             TrackSample s0 = s[0];
+
+            if (startGatePrefab != null)
+            {
+                // D13 fleet: a real warp gate spans the start line. Auto-fit its bounds to the
+                // configured span, base resting on the road, opening facing the direction of travel.
+                GameObject gate = Instantiate(startGatePrefab, transform);
+                gate.name = "StartGate";
+                foreach (Collider collider in gate.GetComponentsInChildren<Collider>())
+                {
+                    Destroy(collider);                      // collision stays the analytic clamp
+                }
+
+                Renderer[] renderers = gate.GetComponentsInChildren<Renderer>();
+                if (renderers.Length > 0)
+                {
+                    Bounds bounds = renderers[0].bounds;
+                    for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+                    float width = Mathf.Max(bounds.size.x, 0.01f);
+                    float scale = gateSpanWidth / width;
+                    gate.transform.localScale = Vector3.one * scale;
+
+                    // Recentre laterally/longitudinally on the start line; rest the base at y 0.
+                    Vector3 centre = bounds.center * scale;
+                    float bottom = (bounds.min.y - bounds.center.y) * scale;
+                    gate.transform.rotation = Quaternion.LookRotation(s0.Tan, Vector3.up);
+                    gate.transform.position = new Vector3(s0.Pos.x, 0f, s0.Pos.z)
+                        - gate.transform.rotation * new Vector3(centre.x, 0f, centre.z)
+                        + Vector3.up * (-bottom);
+                }
+                else
+                {
+                    gate.transform.SetPositionAndRotation(
+                        new Vector3(s0.Pos.x, 0f, s0.Pos.z),
+                        Quaternion.LookRotation(s0.Tan, Vector3.up));
+                }
+                return;
+            }
+
             var go = new GameObject("StartGate");
             go.transform.SetParent(transform, false);
             go.AddComponent<MeshFilter>().sharedMesh = BuildTorus(half + 1f, 0.5f, 8, 24);

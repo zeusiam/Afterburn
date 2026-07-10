@@ -1,0 +1,57 @@
+{
+  "id": "r20",
+  "name": "Shard Verge",
+  "mode": "race",
+  "biomeFamily": "Crystal Expanse",
+  "difficulty": 4,
+  "hazards": [
+    "Cutting edges"
+  ],
+  "laps": 3,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#0A0F22",
+    "fog": "#0A0F22",
+    "ground": "#142036",
+    "accent": "#5EE3FF",
+    "accentAlt": "#FF3D8B",
+    "starfield": "#B7F0FF"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0A0F22",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "closed-loop-spline",
+    "halfWidth": 17,
+    "minCornerRadius": 58,
+    "shortcuts": [
+      "LightGap",
+      "HeavyWall"
+    ]
+  },
+  "props": [
+    "crystal-spire",
+    "shard-cluster",
+    "prism"
+  ],
+  "audioBed": "gameplay"
+}

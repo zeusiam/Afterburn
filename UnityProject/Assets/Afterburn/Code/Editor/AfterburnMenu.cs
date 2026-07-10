@@ -140,6 +140,46 @@ namespace Afterburn.EditorTools
         }
 
         /// <summary>
+        /// D13 complete: wire three USC ship FAMILIES onto the hulls — each hull class gets a
+        /// named identity (Light = CosmicShark, Medium = StriderOx, Heavy = VoidWhale).
+        /// OVERWRITES current assignments (explicit upgrade from the StarSparrow stand-ins);
+        /// searches the family folder so prefab numbering doesn't matter.
+        /// </summary>
+        [MenuItem("Veratus/Afterburn/Setup/Assign USC Hull Visuals", priority = 29)]
+        public static void AssignUscHullVisuals()
+        {
+            (string hull, string family)[] picks =
+            {
+                ("Light", "CosmicShark"),
+                ("Medium", "StriderOx"),
+                ("Heavy", "VoidWhale"),
+            };
+            int assigned = 0;
+            foreach ((string hullName, string family) in picks)
+            {
+                var hull = AssetDatabase.LoadAssetAtPath<HullDefinition>($"{HullsDir}/{hullName}.asset");
+                if (hull == null) { Debug.LogError($"[Afterburn] Hull '{hullName}' missing — run Create or Update SOs."); continue; }
+
+                string folder = $"Assets/UltimateSpaceshipsCreator/Prefabs/ModularExamples/{family}";
+                string[] guids = AssetDatabase.FindAssets("t:GameObject", new[] { folder });
+                System.Array.Sort(guids, (a, b) => string.CompareOrdinal(
+                    AssetDatabase.GUIDToAssetPath(a), AssetDatabase.GUIDToAssetPath(b)));
+                if (guids.Length == 0)
+                {
+                    Debug.LogError($"[Afterburn] No prefabs found under {folder} — is USC imported?");
+                    continue;
+                }
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                hull.shipPrefab = prefab;
+                EditorUtility.SetDirty(hull);
+                assigned++;
+                Debug.Log($"[Afterburn] {hullName} ← {prefab.name} ({family}). Swap any variant from {folder} in the Inspector.");
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[Afterburn] USC visuals assigned to {assigned} hull(s).");
+        }
+
+        /// <summary>
         /// D13 gate 0: wire three distinct StarSparrow example ships onto the hull assets
         /// (only where empty — idempotent, never overwrites a hand-picked prefab).
         /// </summary>

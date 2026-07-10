@@ -1,0 +1,13 @@
+{
+  "id": "medium",
+  "name": "Medium",
+  "role": "Balanced",
+  "type": "hull",
+  "stats": {
+    "Energy": 100,
+    "Regen": 8,
+    "Speed": "1.00×"
+  },
+  "tint": "#9D7BFF",
+  "bio": "No gate access, no weakness. The honest default."
+}

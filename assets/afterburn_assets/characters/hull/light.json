@@ -1,0 +1,13 @@
+{
+  "id": "light",
+  "name": "Light",
+  "role": "Interceptor",
+  "type": "hull",
+  "stats": {
+    "Energy": 80,
+    "Regen": 11,
+    "Speed": "1.15×"
+  },
+  "tint": "#37D0FF",
+  "bio": "Fast, fragile, thirsty pool. Fits the Light-Gap shortcut."
+}

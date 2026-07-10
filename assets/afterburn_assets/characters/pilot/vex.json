@@ -1,0 +1,10 @@
+{
+  "id": "vex",
+  "name": "Vex",
+  "role": "Disruptor",
+  "type": "pilot",
+  "ability": "EMP Pulse",
+  "cooldown": "18s",
+  "note": "Upgrades reduce cooldown ONLY — never damage or speed.",
+  "bio": "Drains 30 energy from nearby rivals. Cripple the pack, then run."
+}

@@ -1,0 +1,57 @@
+{
+  "id": "r11",
+  "name": "Storm Latitude",
+  "mode": "race",
+  "biomeFamily": "Gas Giant Rings",
+  "difficulty": 3,
+  "hazards": [
+    "Lightning"
+  ],
+  "laps": 3,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#090E1E",
+    "fog": "#0A0F22",
+    "ground": "#152541",
+    "accent": "#F5C754",
+    "accentAlt": "#7DB4FF",
+    "starfield": "#CFE0FF"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0A0F22",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "closed-loop-spline",
+    "halfWidth": 17,
+    "minCornerRadius": 58,
+    "shortcuts": [
+      "LightGap",
+      "HeavyWall"
+    ]
+  },
+  "props": [
+    "ring-band",
+    "planet-body",
+    "ice-chunk"
+  ],
+  "audioBed": "gameplay"
+}

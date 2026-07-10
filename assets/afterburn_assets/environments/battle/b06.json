@@ -1,0 +1,54 @@
+{
+  "id": "b06",
+  "name": "Hollow Kessia",
+  "mode": "battle",
+  "biomeFamily": "Asteroid Hollow",
+  "difficulty": 3,
+  "hazards": [
+    "Cave-ins"
+  ],
+  "laps": null,
+  "recommendedScale": 0.34,
+  "palette": {
+    "sky": "#0B0A12",
+    "fog": "#0C0A14",
+    "ground": "#1E1712",
+    "accent": "#FF8A3C",
+    "accentAlt": "#FF3D8B",
+    "starfield": "#D9C3A0"
+  },
+  "fog": {
+    "mode": "Linear",
+    "color": "#0C0A14",
+    "near": 220,
+    "far": 620
+  },
+  "lighting": {
+    "hemisphere": {
+      "sky": "#9FC4FF",
+      "ground": "#0A0F1E",
+      "intensity": 0.9
+    },
+    "directional": {
+      "color": "#FFFFFF",
+      "intensity": 0.9,
+      "position": [
+        120,
+        200,
+        80
+      ]
+    }
+  },
+  "track": {
+    "type": "arena",
+    "shape": "disc",
+    "coverProps": true
+  },
+  "props": [
+    "rock-wall",
+    "ore-glint",
+    "lava-vent",
+    "pillar"
+  ],
+  "audioBed": "gameplay_hyper"
+}

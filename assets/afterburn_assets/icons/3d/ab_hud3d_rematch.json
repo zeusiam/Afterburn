@@ -1,0 +1,20 @@
+{
+  "id": "rematch",
+  "kind": "holographic-hud-emblem",
+  "tint": "#5ee3ff",
+  "geometry": "flat SVG extruded (fills->beveled solids, strokes->tubes) + hex backplate + projector base",
+  "extrudeDepth": 1.2,
+  "bevel": 0.45,
+  "material": {
+    "shader": "URP/Lit + Emission",
+    "emissive": true
+  },
+  "animation": {
+    "bob": "0.7u sine",
+    "ringSpin": true,
+    "coneOpacity": 0.08
+  },
+  "use": "Diegetic 3D cockpit HUD widget — world-space canvas or mesh overlay",
+  "source": "icons/svg/ab_icon_rematch.svg",
+  "note": "Pairs with the flat SVG of the same id for 2D fallback."
+}

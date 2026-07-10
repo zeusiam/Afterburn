@@ -1,0 +1,24 @@
+{
+  "id": "leviathan",
+  "name": "Leviathan",
+  "role": "Boss",
+  "type": "enemy",
+  "threat": "Extreme",
+  "mode": "battle",
+  "bio": "Arena boss. Multi-phase, area denial, the final wall.",
+  "kind": "holographic-emblem",
+  "tint": "#ff8a3c",
+  "geometry": "SVG emblem extruded (fills->beveled solids, strokes->tubes) + hex backplate + projector base",
+  "extrudeDepth": 1.2,
+  "bevel": 0.45,
+  "material": {
+    "shader": "URP/Lit + Emission",
+    "emissive": true
+  },
+  "animation": {
+    "bob": "0.7u sine",
+    "ringSpin": true
+  },
+  "use": "Profile screen / select ring / podium holo-badge",
+  "source": "characters/enemy/leviathan.svg"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "heavy",
+  "name": "Heavy",
+  "role": "Juggernaut",
+  "type": "hull",
+  "stats": {
+    "Energy": 130,
+    "Regen": 5,
+    "Speed": "0.88×"
+  },
+  "tint": "#FF8A3C",
+  "bio": "Slow, huge pool. Smashes the Heavy-Wall shortcut."
+}

@@ -1,0 +1,9 @@
+{
+  "id": "marauder",
+  "name": "Marauder",
+  "role": "Grunt",
+  "type": "enemy",
+  "threat": "Low",
+  "mode": "battle",
+  "bio": "Cheap, aggressive AI drone. Comes in packs."
+}
